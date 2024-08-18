@@ -1,0 +1,24 @@
+{
+  "FolderName": {
+    "OriginalTicket": "1. 原始发票和行程单",
+    "CompletedTicket": "2. 已整理的发票和行程单",
+    "TicketType": {
+      "Taxi": "2.1 打车票",
+      "Airplane": "2.2 飞机票",
+      "Bicycle": "2.3 共享单车",
+      "Other": "2.4 其他"
+    },
+    "InCompletedTicket": "3.无法识别行程日期"
+  },
+  "RegexExpression": {
+    "Date": "((?<=\\u884c\\u7a0b\\u8d77\\u6b62\\u65e5\\u671f：)\\d{4}-\\d{2}-\\d{2})|((?<=\\u884c\\u7a0b\\u65f6\\u95f4：)\\d{4}-\\d{2}-\\d{2})|((?<=\\u884c\\u7a0b\\u8d77\\u6b62\\u65e5\\u671f：)\\d{4}-\\d{2}-\\d{2})",
+    "Location": "((?<= )[\u4e00-\u9fa5]{2,4}[\u5e02](?= ))|((?<= )[\u4e00-\u9fa5]{2,4}[\u5e02](?= ))|((?<= )(\u6df1\u5733|\u5317\u4eac|\u5357\u5b81|\u5317\u6d77|\u676d\u5dde)(?= ))",
+    "Itinerary": {
+      "Start": "",
+      "End": ""
+    },
+    "Company": "(\u6ef4\u6ef4\u51fa\u884c)|(\u9ad8\u5fb7\u5730\u56fe)",
+    "Cost": "(?<=\u5408\u8ba1).*?(?=\u5143)"
+  },
+  "DBPath": "..\\DB\\ticket.db"
+}
