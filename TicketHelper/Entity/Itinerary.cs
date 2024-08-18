@@ -17,5 +17,7 @@ namespace TicketHelper.Entity
         public string? LocationName { get; set; }
         public string? CompanyType { get; set; }
         public string? TicketType { get; set; }
+
+        public string? Remark { get; set; }
     }
 }

@@ -13,6 +13,9 @@ namespace TicketHelper
     {
         public void HandleTicket()
         {
+            // 清空
+            DBItinerary.DeleteAll();
+
             // 解压缩
             this.UnZipFiles();
 
@@ -33,8 +36,8 @@ namespace TicketHelper
                 var newFolder = Program.configuration["FolderName:OriginalTicket"];
                 var newPath = Path.Combine(currentPath, newFolder);
 
-                if (Directory.Exists(newPath))
-                    Directory.Delete(newPath, true);
+                //if (Directory.Exists(newPath))
+                //    Directory.Delete(newPath, true);
 
                 foreach (var file in zipFiles)
                     ZipFile.ExtractToDirectory(file, newFolder, Encoding.GetEncoding("GBK"));
@@ -101,6 +104,12 @@ namespace TicketHelper
                         if (cost == null || string.IsNullOrEmpty(cost))
                             Program.log.Error("获取行程花费失败：" + file);
 
+                        var positions = GetPosition(text.ToString());
+                        Program.log.Info("读取上车地点：" + (positions.Count > 0 ? positions[0].Item2 : null));
+                        Program.log.Info("读取下车地点：" + (positions.Count > 1 ? positions[1]?.Item2 : null));
+                        if (positions == null || positions.Count == 0 || positions.Count == 1)
+                            Program.log.Error("获取上下车地点失败：" + file);
+
                         var newFolderName = string.Join(" ", [date, location, company, cost]);
                         var newCopyPath = Path.Combine(completedTicketFolder, newFolderName);
                         Directory.CreateDirectory(Path.Combine(newCopyPath));
@@ -114,6 +123,8 @@ namespace TicketHelper
                         itinerary.CompanyType = company;
                         itinerary.LocationName = location;
                         itinerary.TicketType = TicketType.Taxi;
+                        itinerary.Start = positions.Count > 0 ? positions[0].Item2 : null;
+                        itinerary.End = positions.Count > 1 ? positions[1]?.Item2 : null;
 
                         DBItinerary.Add(itinerary);
                         Program.log.Info("写入数据库文件Id：" + itinerary.Id);
@@ -156,11 +167,44 @@ namespace TicketHelper
         {
             string pattern = Program.configuration["RegexExpression:Company"];
             var rg = new Regex(pattern);
-            var result = rg.Matches(text).FirstOrDefault().Value;
-            if (result.Length == 4)
-                return result.Substring(0, 2);
+            var result = rg.Matches(text);
+            if (result.Count == 0)
+                return CompanyType.Other;
+            else
+            {
+                var result2 = rg.Matches(text).FirstOrDefault().Value;
+                if (result2.Length == 4)
+                    return result2.Substring(0, 2);
+            }
 
             return CompanyType.Other;
+        }
+
+        private List<Tuple<int, string>> GetPosition(string text)
+        {
+            List<Tuple<int, string>> match = new List<Tuple<int, string>>();
+            DBPosition.PositionList.ForEach(position =>
+            {
+                if (text.Contains(position.PositionName))
+                {
+                    var result = Tuple.Create(text.IndexOf(position.PositionName), position.PositionName);
+                    match.Add(result);
+                }
+            });
+
+            match = match.OrderBy(x => x.Item1).ToList();
+
+            //if (match.Count == 0 || match.Count == 1)
+            //{ 
+
+            //}
+
+            //if (match.Count == 2 && match[0].Item2.Trim().Equals(string.Empty))
+            //{ 
+
+            //}
+
+            return match;
         }
     }
 }

@@ -5,11 +5,27 @@ namespace TicketHelper.DBO
 {
     internal class DBPosition
     {
+        private static List<Position> _PositionList = [];
+        public static List<Position> PositionList
+        {
+            get
+            {
+                if (_PositionList != null && _PositionList.Count > 0)
+                    return _PositionList;
+                else
+                {
+                    return GetAllPosition();
+                }
+            }
+        }
+
         private static string dbPath = "ticket.db";
         private static string dataInitPath = "Data\\PositionInitData.txt";
 
         public static void DataInit()
         {
+            DeleteAll();
+
             var path = Path.Combine(Directory.GetCurrentDirectory(), dataInitPath);
             var lines = File.ReadAllLines(path);
             foreach (string line in lines)

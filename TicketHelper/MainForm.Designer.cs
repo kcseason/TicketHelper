@@ -31,7 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             toolStrip1 = new ToolStrip();
             tdb_Run = new ToolStripButton();
+            tdbDataInit = new ToolStripButton();
             splitContainer1 = new SplitContainer();
+            label8 = new Label();
             cbTicketType = new ComboBox();
             label7 = new Label();
             cbCompany = new ComboBox();
@@ -46,7 +48,6 @@
             tbTotalMoney = new TextBox();
             label1 = new Label();
             GvItinerary = new DataGridView();
-            tdbDataInit = new ToolStripButton();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -74,6 +75,15 @@
             tdb_Run.Text = "运行";
             tdb_Run.Click += tdb_Run_Click;
             // 
+            // tdbDataInit
+            // 
+            tdbDataInit.Image = (Image)resources.GetObject("tdbDataInit.Image");
+            tdbDataInit.ImageTransparentColor = Color.Magenta;
+            tdbDataInit.Name = "tdbDataInit";
+            tdbDataInit.Size = new Size(92, 28);
+            tdbDataInit.Text = "初始化";
+            tdbDataInit.Click += tdbDataInit_Click;
+            // 
             // splitContainer1
             // 
             splitContainer1.Dock = DockStyle.Fill;
@@ -84,6 +94,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(label8);
             splitContainer1.Panel1.Controls.Add(cbTicketType);
             splitContainer1.Panel1.Controls.Add(label7);
             splitContainer1.Panel1.Controls.Add(cbCompany);
@@ -105,6 +116,15 @@
             splitContainer1.SplitterDistance = 70;
             splitContainer1.SplitterWidth = 1;
             splitContainer1.TabIndex = 1;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(1444, 27);
+            label8.Name = "label8";
+            label8.Size = new Size(28, 24);
+            label8.TabIndex = 13;
+            label8.Text = "元";
             // 
             // cbTicketType
             // 
@@ -209,16 +229,17 @@
             // 
             // tbTotalMoney
             // 
-            tbTotalMoney.Location = new Point(1336, 21);
+            tbTotalMoney.Location = new Point(1311, 21);
             tbTotalMoney.Name = "tbTotalMoney";
             tbTotalMoney.ReadOnly = true;
-            tbTotalMoney.Size = new Size(150, 30);
+            tbTotalMoney.Size = new Size(133, 30);
             tbTotalMoney.TabIndex = 1;
+            tbTotalMoney.TextAlign = HorizontalAlignment.Right;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(1289, 24);
+            label1.Location = new Point(1264, 24);
             label1.Name = "label1";
             label1.Size = new Size(46, 24);
             label1.TabIndex = 0;
@@ -235,15 +256,9 @@
             GvItinerary.RowHeadersWidth = 62;
             GvItinerary.Size = new Size(1545, 885);
             GvItinerary.TabIndex = 0;
-            // 
-            // tdbDataInit
-            // 
-            tdbDataInit.Image = (Image)resources.GetObject("tdbDataInit.Image");
-            tdbDataInit.ImageTransparentColor = Color.Magenta;
-            tdbDataInit.Name = "tdbDataInit";
-            tdbDataInit.Size = new Size(92, 28);
-            tdbDataInit.Text = "初始化";
-            tdbDataInit.Click += tdbDataInit_Click;
+            GvItinerary.CellPainting += dataGridView1_CellPainting;
+            GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
+            GvItinerary.DataBindingComplete += GvItinerary_DataBindingComplete;
             // 
             // MainForm
             // 
@@ -288,5 +303,6 @@
         private ComboBox cbTicketType;
         private Label label7;
         private ToolStripButton tdbDataInit;
+        private Label label8;
     }
 }

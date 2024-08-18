@@ -18,7 +18,11 @@ namespace TicketHelper.DBO
             using var conn = new SQLiteConnection(dbPath);
             conn.Delete<Itinerary>(itinerary.Id);
         }
-
+        public static void DeleteAll()
+        {
+            using var conn = new SQLiteConnection(dbPath);
+            conn.DeleteAll<Itinerary>();
+        }
         public static void Update(Itinerary itinerary)
         {
             using var conn = new SQLiteConnection(dbPath);
@@ -44,28 +48,28 @@ namespace TicketHelper.DBO
                 // 查询所有Itinerary记录
                 if (CheckIfTableExists(db, "Itinerary"))
                 {
-                    var objs = new List<Object>();
+                    var objs = new List<Object>() { args[0], args[1] };
                     var sql = @"SELECT * FROM Itinerary ";
-                    var whereStr = @" WHERE DateTime>=? AND  DateTime<=?";
+                    var whereStr = @" WHERE DateTime>=? AND  DateTime<=? ";
                     if (!args[2].ToString().Equals("全部"))
                     {
-                        whereStr += @"AND LocationName=?";
+                        whereStr += @"AND LocationName=? ";
                         objs.Add(args[2]);
                     }
                     if (!args[3].ToString().Equals("全部"))
                     {
-                        whereStr += @"AND CompanyType=?";
+                        whereStr += @"AND CompanyType=? ";
                         objs.Add(args[3]);
                     }
                     if (!args[4].ToString().Equals("全部"))
                     {
-                        whereStr += @"AND TicketType=?";
+                        whereStr += @"AND TicketType=? ";
                         objs.Add(args[4]);
                     }
-                    whereStr += "ORDER BY Id";
+                    whereStr += "ORDER BY Id ";
                     sql = sql + whereStr;
 
-                    return db.Query<Itinerary>(sql, args);
+                    return db.Query<Itinerary>(sql, objs.ToArray());
                 }
                 else
                     return new List<Itinerary>();
