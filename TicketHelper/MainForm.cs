@@ -74,9 +74,9 @@ namespace TicketHelper
             GvItinerary.Columns["DateTime"].SortMode = DataGridViewColumnSortMode.Automatic;
             GvItinerary.Columns["DateTime"].DefaultCellStyle.Format = "yyyy-MM-dd";
             GvItinerary.Columns["Start"].HeaderText = "开始地点";
-            GvItinerary.Columns["Start"].Width = 230;
+            GvItinerary.Columns["Start"].Width = 250;
             GvItinerary.Columns["End"].HeaderText = "结束地点";
-            GvItinerary.Columns["End"].Width = 230;
+            GvItinerary.Columns["End"].Width = 250;
             GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
             GvItinerary.Columns["LocationName"].HeaderText = "城市";
             GvItinerary.Columns["CompanyType"].HeaderText = "交通公司";

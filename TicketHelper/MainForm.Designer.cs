@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tdb_Run = new ToolStripButton();
             tdbDataInit = new ToolStripButton();
@@ -62,7 +63,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { tdb_Run, tdbDataInit });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1545, 33);
+            toolStrip1.Size = new Size(1717, 33);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -112,7 +113,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(GvItinerary);
-            splitContainer1.Size = new Size(1545, 956);
+            splitContainer1.Size = new Size(1717, 1038);
             splitContainer1.SplitterDistance = 70;
             splitContainer1.SplitterWidth = 1;
             splitContainer1.TabIndex = 1;
@@ -249,12 +250,22 @@
             // 
             GvItinerary.AllowUserToOrderColumns = true;
             GvItinerary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            GvItinerary.DefaultCellStyle = dataGridViewCellStyle1;
             GvItinerary.Dock = DockStyle.Fill;
             GvItinerary.Location = new Point(0, 0);
             GvItinerary.Name = "GvItinerary";
             GvItinerary.ReadOnly = true;
             GvItinerary.RowHeadersWidth = 62;
-            GvItinerary.Size = new Size(1545, 885);
+            GvItinerary.RowTemplate.Height = 35;
+            GvItinerary.RowTemplate.ReadOnly = true;
+            GvItinerary.Size = new Size(1717, 967);
             GvItinerary.TabIndex = 0;
             GvItinerary.CellPainting += dataGridView1_CellPainting;
             GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
@@ -264,7 +275,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1545, 989);
+            ClientSize = new Size(1717, 1071);
             Controls.Add(splitContainer1);
             Controls.Add(toolStrip1);
             Name = "MainForm";

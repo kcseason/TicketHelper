@@ -49,7 +49,7 @@ namespace TicketHelper
 
         private void ReadPDF()
         {
-            //Program.log.Info("开始读取pdf文件。");
+            Program.log.Info("开始读取pdf文件。");
 
             var currentPath = Directory.GetCurrentDirectory();
             var originalTicketFolder = Program.configuration["FolderName:OriginalTicket"];
@@ -58,12 +58,12 @@ namespace TicketHelper
             if (Directory.Exists(completedTicketFolder))
             {
                 Directory.Delete(Path.Combine(completedTicketFolder), true);
-                //Program.log.Info("删除文件夹：" + completedTicketFolder);
+                Program.log.Info("删除文件夹：" + completedTicketFolder);
             }
 
             var newPath = Path.Combine(currentPath, originalTicketFolder);
             var pdfFiles = Directory.GetFiles(newPath, "行程单*.pdf");
-            //Program.log.Info("遍历文件夹：" + newPath);
+            Program.log.Info("遍历文件夹：" + newPath);
 
             foreach (var file in pdfFiles)
             {
@@ -71,7 +71,7 @@ namespace TicketHelper
                 var text = new StringBuilder();
                 using (PdfReader reader = new PdfReader(file))
                 {
-                    //Program.log.Info("读取pdf文件：" + file);
+                    Program.log.Info("读取pdf文件：" + file);
                     using (PdfDocument doc = new PdfDocument(reader))
                     {
                         for (int page = 1; page <= doc.GetNumberOfPages(); page++)
@@ -82,31 +82,31 @@ namespace TicketHelper
                             text.Append(currentText);
                         }
 
-                        //Program.log.Info("读取pdf文件内容：" + text);
+                        Program.log.Info("读取pdf文件内容：" + text);
 
                         var date = RegexMatchDate(text.ToString());
-                        //Program.log.Info("读取行程日期：" + date);
+                        Program.log.Info("读取行程日期：" + date);
                         if (date == null || string.IsNullOrEmpty(date))
                             Program.log.Error("获取行程日期失败：" + file);
 
                         var location = RegexMatchLocation(text.ToString());
-                        //Program.log.Info("读取行程地点：" + location);
+                        Program.log.Info("读取行程地点：" + location);
                         if (location == null || string.IsNullOrEmpty(location))
                             Program.log.Error("获取行程地点失败：" + file);
 
                         var company = RegexMatchCompany(text.ToString());
-                        //Program.log.Info("读取出行公司：" + company);
+                        Program.log.Info("读取出行公司：" + company);
                         if (company == null || string.IsNullOrEmpty(company))
                             Program.log.Error("获取出行公司失败：" + file);
 
                         var cost = RegexMatchCost(text.ToString());
-                        //Program.log.Info("读取行程花费：" + cost);
+                        Program.log.Info("读取行程花费：" + cost);
                         if (cost == null || string.IsNullOrEmpty(cost))
                             Program.log.Error("获取行程花费失败：" + file);
 
                         var positions = GetPosition(text.ToString());
-                        //Program.log.Info("读取上车地点：" + (positions.Count > 0 ? positions[0].Item2 : null));
-                        //Program.log.Info("读取下车地点：" + (positions.Count > 1 ? positions[1]?.Item2 : null));
+                        Program.log.Info("读取上车地点：" + (positions.Count > 0 ? positions[0].Item2 : null));
+                        Program.log.Info("读取下车地点：" + (positions.Count > 1 ? positions[1]?.Item2 : null));
                         if (positions == null || positions.Count == 0 || positions.Count == 1)
                             Program.log.Error("获取上下车地点失败：" + text);
 
@@ -116,7 +116,7 @@ namespace TicketHelper
 
                         var fi = new FileInfo(file);
                         File.Copy(file, Path.Combine(newCopyPath, fi.Name), true);
-                        //Program.log.Info("复制pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, fi.Name));
+                        Program.log.Info("复制pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, fi.Name));
 
                         itinerary.DateTime = Convert.ToDateTime(date);
                         itinerary.Cost = Convert.ToDecimal(cost);
@@ -128,7 +128,7 @@ namespace TicketHelper
                         itinerary.FeeType = FeeType.Traffic;
 
                         DBItinerary.Add(itinerary);
-                        //Program.log.Info("写入数据库文件Id：" + itinerary.Id);
+                        Program.log.Info("写入数据库文件Id：" + itinerary.Id);
                     }
                 }
             }
