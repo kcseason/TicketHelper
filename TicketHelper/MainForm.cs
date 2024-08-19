@@ -1,5 +1,6 @@
 using TicketHelper.DBO;
-using TicketHelper.Entity;
+using TicketHelper.Handler;
+using TicketHelper.Model;
 using TicketHelper.String;
 
 namespace TicketHelper
@@ -62,7 +63,7 @@ namespace TicketHelper
 
         private void tdbDataInit_Click(object sender, EventArgs e)
         {
-            DBPosition.DataInit();
+            PositionHandler.DataInit();
         }
 
         private void GvItinerary_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
@@ -72,14 +73,15 @@ namespace TicketHelper
             GvItinerary.Columns["DateTime"].HeaderText = "行程日期";
             GvItinerary.Columns["DateTime"].SortMode = DataGridViewColumnSortMode.Automatic;
             GvItinerary.Columns["DateTime"].DefaultCellStyle.Format = "yyyy-MM-dd";
-            GvItinerary.Columns["Start"].HeaderText = "上车地点";
-            GvItinerary.Columns["Start"].Width = 200;
-            GvItinerary.Columns["End"].HeaderText = "下车地点";
-            GvItinerary.Columns["End"].Width = 200;
+            GvItinerary.Columns["Start"].HeaderText = "开始地点";
+            GvItinerary.Columns["Start"].Width = 230;
+            GvItinerary.Columns["End"].HeaderText = "结束地点";
+            GvItinerary.Columns["End"].Width = 230;
             GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
             GvItinerary.Columns["LocationName"].HeaderText = "城市";
             GvItinerary.Columns["CompanyType"].HeaderText = "交通公司";
             GvItinerary.Columns["TicketType"].HeaderText = "票据类型";
+            GvItinerary.Columns["FeeType"].HeaderText = "费用类型";
             GvItinerary.Columns["Remark"].HeaderText = "备注";
             GvItinerary.Columns["Remark"].Width = 250;
         }

@@ -1,5 +1,5 @@
 ﻿using SQLite;
-using TicketHelper.Entity;
+using TicketHelper.Model;
 
 namespace TicketHelper.DBO
 {
