@@ -29,16 +29,19 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tdb_Run = new ToolStripButton();
             tdbDataInit = new ToolStripButton();
+            tsbTraffic = new ToolStripButton();
+            tsbHotel = new ToolStripButton();
+            tsbHospital = new ToolStripButton();
             splitContainer1 = new SplitContainer();
             label8 = new Label();
             cbTicketType = new ComboBox();
-            label7 = new Label();
+            lbTicketType = new Label();
             cbCompany = new ComboBox();
-            label6 = new Label();
+            lbCompany = new Label();
             label5 = new Label();
             dtEnd = new DateTimePicker();
             label4 = new Label();
@@ -60,10 +63,10 @@
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { tdb_Run, tdbDataInit });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { tdb_Run, tdbDataInit, tsbTraffic, tsbHotel, tsbHospital });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1717, 33);
+            toolStrip1.Size = new Size(1827, 33);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -85,6 +88,33 @@
             tdbDataInit.Text = "初始化";
             tdbDataInit.Click += tdbDataInit_Click;
             // 
+            // tsbTraffic
+            // 
+            tsbTraffic.Image = (Image)resources.GetObject("tsbTraffic.Image");
+            tsbTraffic.ImageTransparentColor = Color.Magenta;
+            tsbTraffic.Name = "tsbTraffic";
+            tsbTraffic.Size = new Size(110, 28);
+            tsbTraffic.Text = "交通出行";
+            tsbTraffic.Click += tsbTraffic_Click;
+            // 
+            // tsbHotel
+            // 
+            tsbHotel.Image = (Image)resources.GetObject("tsbHotel.Image");
+            tsbHotel.ImageTransparentColor = Color.Magenta;
+            tsbHotel.Name = "tsbHotel";
+            tsbHotel.Size = new Size(110, 28);
+            tsbHotel.Text = "住宿酒店";
+            tsbHotel.Click += tsbHotel_Click;
+            // 
+            // tsbHospital
+            // 
+            tsbHospital.Image = (Image)resources.GetObject("tsbHospital.Image");
+            tsbHospital.ImageTransparentColor = Color.Magenta;
+            tsbHospital.Name = "tsbHospital";
+            tsbHospital.Size = new Size(110, 28);
+            tsbHospital.Text = "医院看病";
+            tsbHospital.Click += tsbHospital_Click;
+            // 
             // splitContainer1
             // 
             splitContainer1.Dock = DockStyle.Fill;
@@ -97,9 +127,9 @@
             // 
             splitContainer1.Panel1.Controls.Add(label8);
             splitContainer1.Panel1.Controls.Add(cbTicketType);
-            splitContainer1.Panel1.Controls.Add(label7);
+            splitContainer1.Panel1.Controls.Add(lbTicketType);
             splitContainer1.Panel1.Controls.Add(cbCompany);
-            splitContainer1.Panel1.Controls.Add(label6);
+            splitContainer1.Panel1.Controls.Add(lbCompany);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(dtEnd);
             splitContainer1.Panel1.Controls.Add(label4);
@@ -113,7 +143,7 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(GvItinerary);
-            splitContainer1.Size = new Size(1717, 1038);
+            splitContainer1.Size = new Size(1827, 1085);
             splitContainer1.SplitterDistance = 70;
             splitContainer1.SplitterWidth = 1;
             splitContainer1.TabIndex = 1;
@@ -137,14 +167,14 @@
             cbTicketType.TabIndex = 12;
             cbTicketType.SelectedIndexChanged += Search;
             // 
-            // label7
+            // lbTicketType
             // 
-            label7.AutoSize = true;
-            label7.Location = new Point(991, 23);
-            label7.Name = "label7";
-            label7.Size = new Size(46, 24);
-            label7.TabIndex = 11;
-            label7.Text = "票类";
+            lbTicketType.AutoSize = true;
+            lbTicketType.Location = new Point(991, 23);
+            lbTicketType.Name = "lbTicketType";
+            lbTicketType.Size = new Size(46, 24);
+            lbTicketType.TabIndex = 11;
+            lbTicketType.Text = "票类";
             // 
             // cbCompany
             // 
@@ -156,14 +186,14 @@
             cbCompany.TabIndex = 10;
             cbCompany.SelectedIndexChanged += Search;
             // 
-            // label6
+            // lbCompany
             // 
-            label6.AutoSize = true;
-            label6.Location = new Point(775, 24);
-            label6.Name = "label6";
-            label6.Size = new Size(46, 24);
-            label6.TabIndex = 9;
-            label6.Text = "出行";
+            lbCompany.AutoSize = true;
+            lbCompany.Location = new Point(775, 24);
+            lbCompany.Name = "lbCompany";
+            lbCompany.Size = new Size(46, 24);
+            lbCompany.TabIndex = 9;
+            lbCompany.Text = "出行";
             // 
             // label5
             // 
@@ -250,14 +280,14 @@
             // 
             GvItinerary.AllowUserToOrderColumns = true;
             GvItinerary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            GvItinerary.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            GvItinerary.DefaultCellStyle = dataGridViewCellStyle2;
             GvItinerary.Dock = DockStyle.Fill;
             GvItinerary.Location = new Point(0, 0);
             GvItinerary.Name = "GvItinerary";
@@ -265,7 +295,7 @@
             GvItinerary.RowHeadersWidth = 62;
             GvItinerary.RowTemplate.Height = 35;
             GvItinerary.RowTemplate.ReadOnly = true;
-            GvItinerary.Size = new Size(1717, 967);
+            GvItinerary.Size = new Size(1827, 1014);
             GvItinerary.TabIndex = 0;
             GvItinerary.CellPainting += dataGridView1_CellPainting;
             GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
@@ -275,7 +305,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1717, 1071);
+            ClientSize = new Size(1827, 1118);
             Controls.Add(splitContainer1);
             Controls.Add(toolStrip1);
             Name = "MainForm";
@@ -310,10 +340,13 @@
         private DateTimePicker dtStart;
         private Label label5;
         private ComboBox cbCompany;
-        private Label label6;
+        private Label lbCompany;
         private ComboBox cbTicketType;
-        private Label label7;
+        private Label lbTicketType;
         private ToolStripButton tdbDataInit;
         private Label label8;
+        private ToolStripButton tsbTraffic;
+        private ToolStripButton tsbHospital;
+        private ToolStripButton tsbHotel;
     }
 }

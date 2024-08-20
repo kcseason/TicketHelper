@@ -1,4 +1,5 @@
 using TicketHelper.DBO;
+using TicketHelper.Enum;
 using TicketHelper.Handler;
 using TicketHelper.Model;
 using TicketHelper.String;
@@ -9,6 +10,7 @@ namespace TicketHelper
     {
         private bool IsLoad = true;
         private bool IsAsc = true;
+        private CurrentModule currentModuel = CurrentModule.None;
         public MainForm()
         {
             InitializeComponent();
@@ -17,11 +19,6 @@ namespace TicketHelper
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitSearchPanel();
-
-            var list = DBItinerary.GetAllItinerary();
-            GvItinerary.DataSource = list;
-            tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
-
             IsLoad = false;
         }
 
@@ -30,16 +27,13 @@ namespace TicketHelper
             var runHelper = new RunHelper();
             runHelper.HandleTicket();
 
-            GvItinerary.DataSource = null;
-            var list = DBItinerary.GetAllItinerary();
-            GvItinerary.DataSource = list;
-            tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            tsbTraffic_Click(null, null);
         }
 
         private void InitSearchPanel()
         {
-            cbCity.DataSource = LocationName.Locations;
-            cbCompany.DataSource = CompanyType.Locations;
+            cbCity.DataSource = CityName.CityList;
+            cbCompany.DataSource = CompanyType.CompanyList;
             cbTicketType.DataSource = TicketType.TicketTypes;
         }
 
@@ -48,17 +42,35 @@ namespace TicketHelper
             if (IsLoad)
                 return;
 
-            DateTime start = dtStart.Value.Date;
-            DateTime end = dtEnd.Value.Date;
-            var city = cbCity.Text;
-            var company = cbCompany.Text;
-            var ticketType = cbTicketType.Text;
+            if (currentModuel == CurrentModule.Traffic)
+            {
+                DateTime start = dtStart.Value.Date;
+                DateTime end = dtEnd.Value.Date;
+                var city = cbCity.Text;
+                var company = cbCompany.Text;
+                var ticketType = cbTicketType.Text;
 
-            var pams = new object[] { start, end, city, company, ticketType };
-            var list = DBItinerary.GetAllItinerary(pams);
-            GvItinerary.DataSource = list;
+                var pams = new object[] { start, end, city, company, ticketType };
+                var list = new SQLiteDBItinerary<Itinerary>().QueryTable(pams);
+                GvItinerary.DataSource = list;
 
-            tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            }
+
+            if (currentModuel == CurrentModule.Hospital)
+            {
+                DateTime start = dtStart.Value.Date;
+                DateTime end = dtEnd.Value.Date;
+                var city = cbCity.Text;
+                var company = cbCompany.Text;
+                var ticketType = cbTicketType.Text;
+
+                var pams = new object[] { start, end, city, company, ticketType };
+                var list = new SQLiteDBItinerary<Itinerary>().QueryTable(pams);
+                GvItinerary.DataSource = list;
+
+                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            }
         }
 
         private void tdbDataInit_Click(object sender, EventArgs e)
@@ -66,26 +78,89 @@ namespace TicketHelper
             PositionHandler.DataInit();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GvItinerary_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            //设置显示的列名
-            GvItinerary.Columns["Id"].Visible = false;
-            GvItinerary.Columns["DateTime"].HeaderText = "行程日期";
-            GvItinerary.Columns["DateTime"].SortMode = DataGridViewColumnSortMode.Automatic;
-            GvItinerary.Columns["DateTime"].DefaultCellStyle.Format = "yyyy-MM-dd";
-            GvItinerary.Columns["Start"].HeaderText = "开始地点";
-            GvItinerary.Columns["Start"].Width = 250;
-            GvItinerary.Columns["End"].HeaderText = "结束地点";
-            GvItinerary.Columns["End"].Width = 250;
-            GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
-            GvItinerary.Columns["LocationName"].HeaderText = "城市";
-            GvItinerary.Columns["CompanyType"].HeaderText = "交通公司";
-            GvItinerary.Columns["TicketType"].HeaderText = "票据类型";
-            GvItinerary.Columns["FeeType"].HeaderText = "费用类型";
-            GvItinerary.Columns["Remark"].HeaderText = "备注";
-            GvItinerary.Columns["Remark"].Width = 250;
+            if (currentModuel == CurrentModule.Traffic)
+            {
+                //设置显示的列名
+                GvItinerary.Columns["Id"].Visible = false;
+                GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
+                GvItinerary.Columns["StartDate"].DisplayIndex = 0;
+                GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                GvItinerary.Columns["StartDate"].DefaultCellStyle.Format = "yyyy-MM-dd";
+                GvItinerary.Columns["EndDate"].Visible = false;
+                GvItinerary.Columns["Start"].HeaderText = "开始地点";
+                GvItinerary.Columns["Start"].Width = 270;
+                GvItinerary.Columns["End"].HeaderText = "结束地点";
+                GvItinerary.Columns["End"].Width = 270;
+                GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                GvItinerary.Columns["CityName"].HeaderText = "城市";
+                GvItinerary.Columns["CityName"].DisplayIndex = 1;
+                GvItinerary.Columns["CompanyType"].HeaderText = "交通公司";
+                GvItinerary.Columns["TicketType"].HeaderText = "票据类型";
+                GvItinerary.Columns["FeeType"].HeaderText = "费用类型";
+                GvItinerary.Columns["Remark"].HeaderText = "备注";
+                GvItinerary.Columns["Remark"].Width = 250;
+            }
+            if (currentModuel == CurrentModule.Hotel)
+            {
+                //设置显示的列名
+                GvItinerary.Columns["Id"].Visible = false;
+                GvItinerary.Columns["CityName"].HeaderText = "城市";
+                GvItinerary.Columns["CityName"].DisplayIndex = 0;
+                GvItinerary.Columns["HotelName"].HeaderText = "住宿地点";
+                GvItinerary.Columns["StartDate"].HeaderText = "开始时间";
+                GvItinerary.Columns["StartDate"].DisplayIndex = 1;
+                GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                GvItinerary.Columns["StartDate"].DefaultCellStyle.Format = "yyyy-MM-dd";
+                GvItinerary.Columns["EndDate"].HeaderText = "结束时间";
+                GvItinerary.Columns["EndDate"].DisplayIndex = 2;
+                GvItinerary.Columns["EndDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                GvItinerary.Columns["EndDate"].DefaultCellStyle.Format = "yyyy-MM-dd";
+                GvItinerary.Columns["HasTicket"].HeaderText = "纸质发票";
+                GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                GvItinerary.Columns["FeeType"].HeaderText = "费用类型";
+                GvItinerary.Columns["Remark"].HeaderText = "备注";
+                GvItinerary.Columns["Remark"].Width = 250;
+            }
+            if (currentModuel == CurrentModule.Hospital)
+            {
+                //设置显示的列名
+                GvItinerary.Columns["Id"].Visible = false;
+                GvItinerary.Columns["CityName"].HeaderText = "城市";
+                GvItinerary.Columns["CityName"].DisplayIndex = 0;
+                GvItinerary.Columns["HospitalName"].HeaderText = "医院名称";
+                GvItinerary.Columns["StartDate"].HeaderText = "开始时间";
+                GvItinerary.Columns["StartDate"].DisplayIndex = 1;
+                GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                GvItinerary.Columns["StartDate"].DefaultCellStyle.Format = "yyyy-MM-dd";
+                GvItinerary.Columns["EndDate"].HeaderText = "结束时间";
+                GvItinerary.Columns["EndDate"].DisplayIndex = 2;
+                GvItinerary.Columns["EndDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                GvItinerary.Columns["EndDate"].DefaultCellStyle.Format = "yyyy-MM-dd";
+                GvItinerary.Columns["PatientType"].HeaderText = "就诊类型";
+                GvItinerary.Columns["HasPatientRecord"].HeaderText = "门诊病历";
+                GvItinerary.Columns["HasPatientTicket"].HeaderText = "纸质发票";
+                GvItinerary.Columns["HasPatientDetail"].HeaderText = "费用清单";
+                GvItinerary.Columns["HasBChaoReport"].HeaderText = "B超报告";
+                GvItinerary.Columns["HasCTReport"].HeaderText = "CT报告";
+                GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                GvItinerary.Columns["FeeType"].HeaderText = "费用类型";
+                GvItinerary.Columns["Remark"].HeaderText = "备注";
+                GvItinerary.Columns["Remark"].Width = 250;
+            }
         }
 
+        /// <summary>
+        /// 序号列
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex == -1)
@@ -98,23 +173,27 @@ namespace TicketHelper
                 e.Handled = true;
             }
         }
-
+        /// <summary>
+        /// 设置表头排序
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void GvItinerary_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             // 获取点击的列索引
             int columnIndex = e.ColumnIndex;
 
             var data = (List<Itinerary>)GvItinerary.DataSource;
-            if (GvItinerary.Columns[columnIndex].DataPropertyName.Equals("DateTime"))
+            if (GvItinerary.Columns[columnIndex].DataPropertyName.Equals("StartDate"))
             {
                 if (IsAsc)
                 {
-                    data = data.OrderBy(x => x.DateTime).ToList();
+                    data = data.OrderBy(x => x.StartDate).ToList();
                     IsAsc = !IsAsc;
                 }
                 else
                 {
-                    data = data.OrderByDescending(x => x.DateTime).ToList();
+                    data = data.OrderByDescending(x => x.StartDate).ToList();
                     IsAsc = !IsAsc;
                 }
             }
@@ -131,16 +210,16 @@ namespace TicketHelper
                     IsAsc = !IsAsc;
                 }
             }
-            if (GvItinerary.Columns[columnIndex].DataPropertyName.Equals("LocationName"))
+            if (GvItinerary.Columns[columnIndex].DataPropertyName.Equals("CityName"))
             {
                 if (IsAsc)
                 {
-                    data = data.OrderBy(x => x.LocationName).ToList();
+                    data = data.OrderBy(x => x.CityName).ToList();
                     IsAsc = !IsAsc;
                 }
                 else
                 {
-                    data = data.OrderByDescending(x => x.LocationName).ToList();
+                    data = data.OrderByDescending(x => x.CityName).ToList();
                     IsAsc = !IsAsc;
                 }
             }
@@ -173,6 +252,58 @@ namespace TicketHelper
             // 应用排序结果到GridView
             GvItinerary.DataSource = data;
             GvItinerary.Refresh();
+        }
+
+        private void tsbTraffic_Click(object sender, EventArgs e)
+        {
+            currentModuel = CurrentModule.Traffic;
+            ShowCondition();
+            ShowData();
+        }
+        private void tsbHospital_Click(object sender, EventArgs e)
+        {
+            currentModuel = CurrentModule.Hospital;
+            ShowCondition();
+            ShowData();
+        }
+        private void tsbHotel_Click(object sender, EventArgs e)
+        {
+            currentModuel = CurrentModule.Hotel;
+            ShowCondition();
+            ShowData();
+        }
+        private void ShowData()
+        {
+            if (currentModuel == CurrentModule.Traffic)
+            {
+                GvItinerary.DataSource = null;
+                var list = new SQLiteDBItinerary<Itinerary>().QueryTable();
+                GvItinerary.DataSource = list;
+                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            }
+            if (currentModuel == CurrentModule.Hotel)
+            {
+                GvItinerary.DataSource = null;
+                var list = new SQLiteDBHotel<Hotel>().QueryTable();
+                GvItinerary.DataSource = list;
+                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            }
+            if (currentModuel == CurrentModule.Hospital)
+            {
+                GvItinerary.DataSource = null;
+                var list = new SQLiteDBHospitalPatient<HospitalPatient>().QueryTable();
+                GvItinerary.DataSource = list;
+                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+            }
+        }
+
+        private void ShowCondition()
+        {
+            lbCompany.Visible = (currentModuel == CurrentModule.Traffic);
+            cbCompany.Visible = (currentModuel == CurrentModule.Traffic);
+
+            lbTicketType.Visible = (currentModuel == CurrentModule.Traffic);
+            cbTicketType.Visible = (currentModuel == CurrentModule.Traffic);
         }
     }
 }

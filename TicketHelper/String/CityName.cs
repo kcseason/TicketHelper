@@ -1,6 +1,6 @@
 ﻿namespace TicketHelper.String
 {
-    public static class LocationName
+    public static class CityName
     {
         public static readonly string Other = "其他";
         public static readonly string Beijing = "北京";
@@ -10,7 +10,7 @@
         public static readonly string Hepu = "合浦";
         public static readonly string Guangzhou = "广州";
 
-        public static List<string> Locations =
+        public static List<string> CityList =
         [
             "全部","北京","深圳","南宁","北海","合浦","广州","其他"
         ];

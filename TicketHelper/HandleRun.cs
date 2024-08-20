@@ -14,7 +14,7 @@ namespace TicketHelper
         public void HandleTicket()
         {
             // 清空
-            DBItinerary.DeleteAll();
+            new SQLiteDBItinerary<Itinerary>().DeleteAll();
 
             // 解压缩
             this.UnZipFiles();
@@ -62,7 +62,7 @@ namespace TicketHelper
             }
 
             var newPath = Path.Combine(currentPath, originalTicketFolder);
-            var pdfFiles = Directory.GetFiles(newPath, "行程单*.pdf");
+            var pdfFiles = Directory.GetFiles(newPath, "*行程单*.pdf");
             Program.log.Info("遍历文件夹：" + newPath);
 
             foreach (var file in pdfFiles)
@@ -118,16 +118,16 @@ namespace TicketHelper
                         File.Copy(file, Path.Combine(newCopyPath, fi.Name), true);
                         Program.log.Info("复制pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, fi.Name));
 
-                        itinerary.DateTime = Convert.ToDateTime(date);
+                        itinerary.StartDate = Convert.ToDateTime(date);
                         itinerary.Cost = Convert.ToDecimal(cost);
                         itinerary.CompanyType = company;
-                        itinerary.LocationName = location;
+                        itinerary.CityName = location;
                         itinerary.TicketType = TicketType.Taxi;
                         itinerary.Start = positions.Count > 0 ? positions[0].Item2 : null;
                         itinerary.End = positions.Count > 1 ? positions[1]?.Item2 : null;
                         itinerary.FeeType = FeeType.Traffic;
 
-                        DBItinerary.Add(itinerary);
+                        new SQLiteDBItinerary<Itinerary>().Insert(itinerary);
                         Program.log.Info("写入数据库文件Id：" + itinerary.Id);
                     }
                 }

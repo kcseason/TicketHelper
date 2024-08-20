@@ -5,17 +5,24 @@ namespace TicketHelper.DBO
 {
     internal class SQLiteDBBase<T> where T : ModelBase, new()
     {
-        private static SQLiteAsyncConnection _connection;
-        public static SQLiteAsyncConnection Connection
+        private static SQLiteConnection _connection;
+        public static SQLiteConnection Connection
         {
             get
             {
                 if (_connection == null)
-                    _connection = new SQLiteAsyncConnection(SQLiteDBConfig.DBPath, SQLiteDBConfig.Flags);
+                    _connection = new SQLiteConnection(SQLiteDBConfig.DBPath, SQLiteDBConfig.Flags);
 
                 return _connection;
             }
         }
+
+        public SQLiteDBBase()
+        {
+            if (!IsTableExists())
+                CreateTable();
+        }
+
         public string GetDBFilePath() => Connection.DatabasePath;
 
         public int GetLibVersionNO() => Connection.LibVersionNumber;
@@ -24,25 +31,41 @@ namespace TicketHelper.DBO
 
         public List<TableMapping> GetTableMappings() => Connection.TableMappings.ToList();
 
-        public int Insert<T>(T t) => Connection.InsertAsync(t).Result;
+        public  int Insert<T>(T t) =>  Connection.Insert(t);
 
-        public int Insert<T>(List<T> list) => Connection.InsertAllAsync(list, true).Result;
+        public int Insert<T>(List<T> list) => Connection.InsertAll(list, true);
 
-        public int Delete(T t) => Connection.DeleteAsync<T>(t.Id).Result;
+        public int Delete(T t) => Connection.Delete<T>(t.Id);
 
-        public int DeleteAll() => Connection.DeleteAllAsync<T>().Result;
+        public int DeleteAll() => Connection.DeleteAll<T>();
 
-        public int Update<T>(T t) => Connection.UpdateAsync(t).Result;
+        public int Update<T>(T t) => Connection.Update(t);
 
-        public int Update<T>(List<T> list) => Connection.UpdateAllAsync(list, true).Result;
+        public int Update<T>(List<T> list) => Connection.UpdateAll(list, true);
 
-        public void CreateTable() => Connection.CreateTableAsync<T>();
+        public  void CreateTable() => Connection.CreateTable<T>();
 
-        public void DropTable() => Connection.DropTableAsync<T>();
+        public void DropTable() => Connection.DropTable<T>();
 
-        //public List<T> QueryByWhere(T t, string sql, params object[] objs) => Connection.QueryAsync<T>(sql, objs);
+        public  List<T> QueryTable(string sql, params object[] objs) => Connection.Query<T>(sql, objs);
 
-        public List<T> QueryTable() => new SQLiteConnection(SQLiteDBConfig.DBPath).Table<T>().ToList();
+        public  List<T> QueryTable() => Connection.Table<T>().ToList();
 
+        private bool IsTableExists()
+        {
+            try
+            {
+                var conn = new SQLiteConnection(SQLiteDBConfig.DBPath);
+                var cmd = new SQLiteCommand(conn);
+                cmd.CommandText = $"SELECT name FROM sqlite_master WHERE type='table' AND name='{nameof(T)}';";
+                var result = cmd.ExecuteQuery<T>();
+
+                return (result != null && result.Count > 0);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }
