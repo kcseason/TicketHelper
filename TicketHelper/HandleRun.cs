@@ -116,7 +116,16 @@ namespace TicketHelper
 
                         var fi = new FileInfo(file);
                         File.Copy(file, Path.Combine(newCopyPath, fi.Name), true);
-                        Program.log.Info("复制pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, fi.Name));
+                        Program.log.Info("复制行程单pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, fi.Name));
+
+                        var ticketFilePath = file.Replace("行程单-", "");
+                        if (File.Exists(ticketFilePath))
+                        {
+                            var ticketFile = new FileInfo(ticketFilePath);
+                            File.Copy(ticketFilePath, Path.Combine(newCopyPath, ticketFile.Name), true);
+                            Program.log.Info("复制发票pdf文件：" + file + " 到 " + Path.Combine(newCopyPath, ticketFile.Name));
+                            itinerary.HasTicket = "有";
+                        }
 
                         itinerary.StartDate = Convert.ToDateTime(date);
                         itinerary.Cost = Convert.ToDecimal(cost);
@@ -126,6 +135,7 @@ namespace TicketHelper
                         itinerary.Start = positions.Count > 0 ? positions[0].Item2 : null;
                         itinerary.End = positions.Count > 1 ? positions[1]?.Item2 : null;
                         itinerary.FeeType = FeeType.Traffic;
+                        itinerary.HasDetail = "有";
 
                         new SQLiteDBItinerary<Itinerary>().Insert(itinerary);
                         Program.log.Info("写入数据库文件Id：" + itinerary.Id);

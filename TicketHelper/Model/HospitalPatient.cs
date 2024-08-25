@@ -18,7 +18,7 @@ namespace TicketHelper.Model
         public string HasBChaoReport { get; set; }
 
         public string HasCTReport { get; set; }
-
+        public string HasMRReport { get; set; }
         public decimal Cost { get; set; }
     }
 }

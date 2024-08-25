@@ -29,13 +29,14 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
-            tdb_Run = new ToolStripButton();
-            tdbDataInit = new ToolStripButton();
             tsbTraffic = new ToolStripButton();
             tsbHotel = new ToolStripButton();
             tsbHospital = new ToolStripButton();
+            tsbExport = new ToolStripButton();
+            toolStripButton2 = new ToolStripDropDownButton();
+            初始化ToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             label8 = new Label();
             cbTicketType = new ComboBox();
@@ -52,6 +53,7 @@
             tbTotalMoney = new TextBox();
             label1 = new Label();
             GvItinerary = new DataGridView();
+            交通出行ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -63,30 +65,12 @@
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(24, 24);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { tdb_Run, tdbDataInit, tsbTraffic, tsbHotel, tsbHospital });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { tsbTraffic, tsbHotel, tsbHospital, tsbExport, toolStripButton2 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(1827, 33);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
-            // 
-            // tdb_Run
-            // 
-            tdb_Run.Image = (Image)resources.GetObject("tdb_Run.Image");
-            tdb_Run.ImageTransparentColor = Color.Magenta;
-            tdb_Run.Name = "tdb_Run";
-            tdb_Run.Size = new Size(74, 28);
-            tdb_Run.Text = "运行";
-            tdb_Run.Click += tdb_Run_Click;
-            // 
-            // tdbDataInit
-            // 
-            tdbDataInit.Image = (Image)resources.GetObject("tdbDataInit.Image");
-            tdbDataInit.ImageTransparentColor = Color.Magenta;
-            tdbDataInit.Name = "tdbDataInit";
-            tdbDataInit.Size = new Size(92, 28);
-            tdbDataInit.Text = "初始化";
-            tdbDataInit.Click += tdbDataInit_Click;
             // 
             // tsbTraffic
             // 
@@ -114,6 +98,31 @@
             tsbHospital.Size = new Size(110, 28);
             tsbHospital.Text = "医院看病";
             tsbHospital.Click += tsbHospital_Click;
+            // 
+            // tsbExport
+            // 
+            tsbExport.Image = (Image)resources.GetObject("tsbExport.Image");
+            tsbExport.ImageTransparentColor = Color.Magenta;
+            tsbExport.Name = "tsbExport";
+            tsbExport.Size = new Size(74, 28);
+            tsbExport.Text = "导出";
+            tsbExport.Click += tsbExport_Click;
+            // 
+            // toolStripButton2
+            // 
+            toolStripButton2.DropDownItems.AddRange(new ToolStripItem[] { 初始化ToolStripMenuItem, 交通出行ToolStripMenuItem });
+            toolStripButton2.Image = (Image)resources.GetObject("toolStripButton2.Image");
+            toolStripButton2.ImageTransparentColor = Color.Magenta;
+            toolStripButton2.Name = "toolStripButton2";
+            toolStripButton2.Size = new Size(88, 28);
+            toolStripButton2.Text = "数据";
+            // 
+            // 初始化ToolStripMenuItem
+            // 
+            初始化ToolStripMenuItem.Name = "初始化ToolStripMenuItem";
+            初始化ToolStripMenuItem.Size = new Size(270, 34);
+            初始化ToolStripMenuItem.Text = "初始化";
+            初始化ToolStripMenuItem.Click += tdbDataInit_Click;
             // 
             // splitContainer1
             // 
@@ -280,14 +289,14 @@
             // 
             GvItinerary.AllowUserToOrderColumns = true;
             GvItinerary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            GvItinerary.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            GvItinerary.DefaultCellStyle = dataGridViewCellStyle1;
             GvItinerary.Dock = DockStyle.Fill;
             GvItinerary.Location = new Point(0, 0);
             GvItinerary.Name = "GvItinerary";
@@ -301,6 +310,13 @@
             GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
             GvItinerary.DataBindingComplete += GvItinerary_DataBindingComplete;
             // 
+            // 交通出行ToolStripMenuItem
+            // 
+            交通出行ToolStripMenuItem.Name = "交通出行ToolStripMenuItem";
+            交通出行ToolStripMenuItem.Size = new Size(270, 34);
+            交通出行ToolStripMenuItem.Text = "交通出行";
+            交通出行ToolStripMenuItem.Click += tdb_Run_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -311,6 +327,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "发票小助手";
+            WindowState = FormWindowState.Maximized;
             Load += MainForm_Load;
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
@@ -327,7 +344,6 @@
         #endregion
 
         private ToolStrip toolStrip1;
-        private ToolStripButton tdb_Run;
         private SplitContainer splitContainer1;
         private DataGridView GvItinerary;
         private TextBox tbTotalMoney;
@@ -343,10 +359,13 @@
         private Label lbCompany;
         private ComboBox cbTicketType;
         private Label lbTicketType;
-        private ToolStripButton tdbDataInit;
         private Label label8;
         private ToolStripButton tsbTraffic;
         private ToolStripButton tsbHospital;
         private ToolStripButton tsbHotel;
+        private ToolStripButton tsbExport;
+        private ToolStripDropDownButton toolStripButton2;
+        private ToolStripMenuItem 初始化ToolStripMenuItem;
+        private ToolStripMenuItem 交通出行ToolStripMenuItem;
     }
 }

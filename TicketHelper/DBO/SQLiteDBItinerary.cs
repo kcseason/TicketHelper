@@ -1,5 +1,4 @@
-﻿using SQLite;
-using TicketHelper.Model;
+﻿using TicketHelper.Model;
 
 namespace TicketHelper.DBO
 {
@@ -14,13 +13,15 @@ namespace TicketHelper.DBO
 
         public int Insert(List<T> hpList) => base.Insert(hpList);
 
-        // public int Delete(Hospital hp) => base.Delete((T)hp);
+        public int Delete(T t) => base.Delete(t);
+
+        public int DeleteList(List<T> list)=>base.DeleteList(list);
 
         public int DeleteAll() => base.DeleteAll();
 
         public int Update(T t) => base.Update(t);
 
-        public int Update(List<T> list) => base.Update(list) ;
+        public int Update(List<T> list) => base.Update(list);
 
         public void CreateTable() => base.CreateTable();
 
@@ -29,9 +30,9 @@ namespace TicketHelper.DBO
         public List<T> QueryTable() => base.QueryTable().ToList();
         //public Task<TableQuery<T>> QueryTable() => base.QueryTable();
 
-        public List<T> QueryTable(object[] args)
+        public List<T> QueryTable(params object[] args)
         {
-            var sql = @"SELECT * FROM Itinerary  WHERE DateTime>=? AND  DateTime<=? ";
+            var sql = @"SELECT * FROM Itinerary  WHERE StartDate>=? AND  StartDate<=? ";
             var objs = new List<object>() { args[0], args[1] };
             if (!args[2].ToString().Equals("全部"))
             {
@@ -49,8 +50,14 @@ namespace TicketHelper.DBO
                 objs.Add(args[4]);
             }
 
-            return base.QueryTable(sql, objs);
+            return base.QueryTable(sql, objs.ToArray());
         }
 
+        public List<T> QueryTableByTicketType(string ticketType)
+        {
+            var sql = @"SELECT * FROM Itinerary  WHERE TicketType=?";
+
+            return base.QueryTable(sql, ticketType);
+        }
     }
 }

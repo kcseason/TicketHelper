@@ -9,9 +9,13 @@
         public static readonly string InPatient = "住院费";
         public static readonly string OutPatient = "门诊费";
 
-        public static List<string> TicketTypes =
+        public static List<string> HospitalFeeTypes =
         [
             "全部","交通费","住宿费","门诊费","康复费","住院费","其他"
+        ];
+        public static List<string> HotelFeeTypes =
+        [
+            "全部","租房","酒店"
         ];
     }
 }

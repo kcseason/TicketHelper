@@ -31,25 +31,31 @@ namespace TicketHelper.DBO
 
         public List<TableMapping> GetTableMappings() => Connection.TableMappings.ToList();
 
-        public  int Insert<T>(T t) =>  Connection.Insert(t);
+        public int Insert<T>(T t) => Connection.Insert(t);
 
         public int Insert<T>(List<T> list) => Connection.InsertAll(list, true);
 
         public int Delete(T t) => Connection.Delete<T>(t.Id);
+        public int DeleteList(List<T> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+                Delete(list[i]);
 
+            return list.Count;
+        }
         public int DeleteAll() => Connection.DeleteAll<T>();
 
         public int Update<T>(T t) => Connection.Update(t);
 
         public int Update<T>(List<T> list) => Connection.UpdateAll(list, true);
 
-        public  void CreateTable() => Connection.CreateTable<T>();
+        public void CreateTable() => Connection.CreateTable<T>();
 
         public void DropTable() => Connection.DropTable<T>();
 
-        public  List<T> QueryTable(string sql, params object[] objs) => Connection.Query<T>(sql, objs);
+        public List<T> QueryTable(string sql, params object[] objs) => Connection.Query<T>(sql, objs).ToList();
 
-        public  List<T> QueryTable() => Connection.Table<T>().ToList();
+        public List<T> QueryTable() => Connection.Table<T>().ToList();
 
         private bool IsTableExists()
         {

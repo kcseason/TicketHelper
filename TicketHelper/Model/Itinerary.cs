@@ -12,5 +12,7 @@ namespace TicketHelper.Model
         public decimal Cost { get; set; }
         public string? CompanyType { get; set; }
         public string? TicketType { get; set; }
+        public string? HasTicket { get; set; }
+        public string? HasDetail { get; set; }
     }
 }

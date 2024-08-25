@@ -7,7 +7,8 @@ namespace TicketHelper.Model
     {
         public Hotel() { }
         public string HotelName { get; set; }
-        public string HasTicket { get; set; }
         public decimal Cost { get; set; }
+        public string HasTicket { get; set; }
+        public string HasETicket { get; set; }
     }
 }
