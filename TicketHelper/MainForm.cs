@@ -1,3 +1,4 @@
+using LoadingIndicator.WinForms;
 using TicketHelper.DBO;
 using TicketHelper.Enum;
 using TicketHelper.Handler;
@@ -10,10 +11,20 @@ namespace TicketHelper
     {
         private bool IsLoad = true;
         private bool IsAsc = true;
+        private LongOperation _longOperation;
+
         private CurrentModule currentModuel = CurrentModule.None;
         public MainForm()
         {
             InitializeComponent();
+
+            var settings = LongOperationSettings.Default
+                                            .WithBoxIndicator(boxSettings =>
+                                            {
+                                                boxSettings.NumberOfBoxes = 5;
+                                            })
+                                            .AllowStopBeforeStartMethods();
+            _longOperation = new LongOperation(this, settings);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -34,8 +45,14 @@ namespace TicketHelper
         {
             cbCity.DataSource = CityName.CityList;
             cbCompany.DataSource = CompanyType.CompanyList;
-            cbTicketType.DataSource = currentModuel == CurrentModule.Traffic ? TicketType.TicketTypes :
-                (currentModuel == CurrentModule.Hotel ? FeeType.HotelFeeTypes : FeeType.HotelFeeTypes);
+
+            if (currentModuel == CurrentModule.Traffic)
+                cbTicketType.DataSource = TicketType.TicketTypes;
+            else
+                cbTicketType.DataSource = FeeType.HotelFeeTypes;
+
+            //cbTicketType.DataSource = currentModuel == CurrentModule.Traffic ? TicketType.TicketTypes :
+            //    (currentModuel == CurrentModule.Hotel ? FeeType.HotelFeeTypes : FeeType.HotelFeeTypes);
         }
         private void Search(object sender, EventArgs e)
         {
@@ -78,14 +95,20 @@ namespace TicketHelper
                 var ticketType = cbTicketType.Text;
 
                 var pams = new object[] { start, end, city, company, ticketType };
-                var list = new SQLiteDBItinerary<Itinerary>().QueryTable(pams);
+                var list = new SQLiteDBHospitalPatient<HospitalPatient>().QueryTable(pams);
                 GvItinerary.DataSource = list;
 
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
             }
         }
 
-        private void tdbDataInit_Click(object sender, EventArgs e)
+        private async void tdbDataInit_Click(object sender, EventArgs e)
+        {
+            using (_longOperation.Start(false))
+                await DoSomethingLongAsync();
+        }
+
+        private async Task DoSomethingLongAsync()
         {
             PositionHandler.DataInit();
             ItineraryHandler.DataInit();
@@ -125,6 +148,7 @@ namespace TicketHelper
                 GvItinerary.Columns["HasTicket"].Width = 100;
                 GvItinerary.Columns["HasDetail"].HeaderText = "行程单";
                 GvItinerary.Columns["HasDetail"].Width = 100;
+                GvItinerary.Columns["ItineraryNO"].HeaderText = "车次/航班";
                 GvItinerary.Columns["Remark"].HeaderText = "备注";
                 GvItinerary.Columns["Remark"].Width = 280;
             }
@@ -133,6 +157,7 @@ namespace TicketHelper
                 //设置显示的列名
                 GvItinerary.Columns["Id"].Visible = false;
                 GvItinerary.Columns["CityName"].HeaderText = "城市";
+                GvItinerary.Columns["CityName"].Width = 100;
                 GvItinerary.Columns["CityName"].DisplayIndex = 0;
                 GvItinerary.Columns["HotelName"].HeaderText = "住宿地点";
                 GvItinerary.Columns["HotelName"].Width = 200;

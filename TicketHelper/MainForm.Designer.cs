@@ -37,6 +37,7 @@
             tsbExport = new ToolStripButton();
             toolStripButton2 = new ToolStripDropDownButton();
             初始化ToolStripMenuItem = new ToolStripMenuItem();
+            交通出行ToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
             label8 = new Label();
             cbTicketType = new ComboBox();
@@ -53,7 +54,6 @@
             tbTotalMoney = new TextBox();
             label1 = new Label();
             GvItinerary = new DataGridView();
-            交通出行ToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -120,9 +120,16 @@
             // 初始化ToolStripMenuItem
             // 
             初始化ToolStripMenuItem.Name = "初始化ToolStripMenuItem";
-            初始化ToolStripMenuItem.Size = new Size(270, 34);
+            初始化ToolStripMenuItem.Size = new Size(182, 34);
             初始化ToolStripMenuItem.Text = "初始化";
             初始化ToolStripMenuItem.Click += tdbDataInit_Click;
+            // 
+            // 交通出行ToolStripMenuItem
+            // 
+            交通出行ToolStripMenuItem.Name = "交通出行ToolStripMenuItem";
+            交通出行ToolStripMenuItem.Size = new Size(182, 34);
+            交通出行ToolStripMenuItem.Text = "交通出行";
+            交通出行ToolStripMenuItem.Click += tdb_Run_Click;
             // 
             // splitContainer1
             // 
@@ -310,13 +317,6 @@
             GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
             GvItinerary.DataBindingComplete += GvItinerary_DataBindingComplete;
             // 
-            // 交通出行ToolStripMenuItem
-            // 
-            交通出行ToolStripMenuItem.Name = "交通出行ToolStripMenuItem";
-            交通出行ToolStripMenuItem.Size = new Size(270, 34);
-            交通出行ToolStripMenuItem.Text = "交通出行";
-            交通出行ToolStripMenuItem.Click += tdb_Run_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
@@ -324,6 +324,7 @@
             ClientSize = new Size(1827, 1118);
             Controls.Add(splitContainer1);
             Controls.Add(toolStrip1);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "发票小助手";

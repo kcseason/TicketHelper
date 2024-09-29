@@ -53,9 +53,9 @@ namespace TicketHelper.DBO
 
         public void DropTable() => Connection.DropTable<T>();
 
-        public List<T> QueryTable(string sql, params object[] objs) => Connection.Query<T>(sql, objs).ToList();
+        public List<T> QueryTable(string sql, params object[] objs) => Connection.Query<T>(sql, objs).OrderByDescending(x => x.StartDate).ToList();
 
-        public List<T> QueryTable() => Connection.Table<T>().ToList();
+        public List<T> QueryTable() => Connection.Table<T>().OrderByDescending(x => x.StartDate).ToList();
 
         private bool IsTableExists()
         {

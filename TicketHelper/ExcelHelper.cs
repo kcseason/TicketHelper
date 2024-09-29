@@ -45,7 +45,8 @@ namespace TicketHelper
                 worksheet.Cell(currentRow, 8).Value = "发票";
                 worksheet.Cell(currentRow, 9).Value = "行程单";
                 worksheet.Cell(currentRow, 10).Value = "费用类型";
-                worksheet.Cell(currentRow, 11).Value = "备注";
+                worksheet.Cell(currentRow, 11).Value = "车次/航班";
+                worksheet.Cell(currentRow, 12).Value = "备注";
 
                 // 填充数据
                 foreach (var item in itineraryList)
@@ -61,7 +62,8 @@ namespace TicketHelper
                     worksheet.Cell(currentRow, 8).Value = item.HasTicket;
                     worksheet.Cell(currentRow, 9).Value = item.HasDetail;
                     worksheet.Cell(currentRow, 10).Value = item.FeeType;
-                    worksheet.Cell(currentRow, 11).Value = item.Remark;
+                    worksheet.Cell(currentRow, 11).Value = item.ItineraryNO;
+                    worksheet.Cell(currentRow, 12).Value = item.Remark;
                 }
 
                 // 调整列宽

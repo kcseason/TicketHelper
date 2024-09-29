@@ -25,7 +25,7 @@ namespace TicketHelper.DBO
 
         public void DropTable() => base.DropTable();
 
-        public List<T> QueryTable() => base.QueryTable().ToList();
+        public List<T> QueryTable() => base.QueryTable();
         //public Task<TableQuery<T>> QueryTable() => base.QueryTable();
     }
 }

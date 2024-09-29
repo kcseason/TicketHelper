@@ -21,7 +21,23 @@ namespace TicketHelper.DBO
         public void CreateTable() => base.CreateTable();
 
         public void DropTable() => base.DropTable();
-        public List<T> QueryTable() => base.QueryTable().ToList();
-        //public Task<TableQuery<T>> QueryTable() => base.QueryTable();
+        public List<T> QueryTable() => base.QueryTable();
+        public List<T> QueryTable(params object[] args)
+        {
+            var sql = @"SELECT * FROM Hospital  WHERE StartDate>=? AND  StartDate<=? ";
+            var objs = new List<object>() { args[0], args[1] };
+            if (!args[2].ToString().Equals("全部"))
+            {
+                sql += @"AND CityName=? ";
+                objs.Add(args[2]);
+            }
+            if (!args[4].ToString().Equals("全部"))
+            {
+                sql += @"AND TicketType=? ";
+                objs.Add(args[4]);
+            }
+
+            return base.QueryTable(sql, objs.ToArray());
+        }
     }
 }

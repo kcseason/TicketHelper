@@ -1,5 +1,4 @@
-﻿using SQLite;
-using TicketHelper.Model;
+﻿using TicketHelper.Model;
 
 namespace TicketHelper.DBO
 {
@@ -22,7 +21,7 @@ namespace TicketHelper.DBO
 
         public void DropTable() => base.DropTable();
 
-        public List<T> QueryTable() => base.QueryTable().ToList();
+        public List<T> QueryTable() => base.QueryTable();
         public List<T> QueryTable(params object[] args)
         {
             var sql = @"SELECT * FROM Hotel  WHERE StartDate>=? AND  StartDate<=? ";

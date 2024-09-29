@@ -14,5 +14,6 @@ namespace TicketHelper.Model
         public string? TicketType { get; set; }
         public string? HasTicket { get; set; }
         public string? HasDetail { get; set; }
+        public string? ItineraryNO { get; set; }
     }
 }

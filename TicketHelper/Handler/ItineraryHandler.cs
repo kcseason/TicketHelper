@@ -35,9 +35,10 @@ namespace TicketHelper.Handler
                     StartDate = Convert.ToDateTime(arr[6]),
                     EndDate = Convert.ToDateTime(arr[6]),
                     FeeType = arr[8],
-                    HasTicket = arr[9],
-                    HasDetail = arr[10],
-                    Remark = arr[11]
+                    ItineraryNO = arr[9],
+                    HasTicket = arr[10],
+                    HasDetail = arr[11],            
+                    Remark = arr[12]
                 });
 
             }
@@ -68,9 +69,10 @@ namespace TicketHelper.Handler
                     StartDate = Convert.ToDateTime(arr[6]),
                     EndDate = Convert.ToDateTime(arr[6]),
                     FeeType = arr[8],
-                    HasTicket = arr[9],
-                    HasDetail = arr[10],
-                    Remark = arr[11]
+                    ItineraryNO = arr[9],
+                    HasTicket = arr[10],
+                    HasDetail = arr[11],
+                    Remark = arr[12]
                 });
 
             }

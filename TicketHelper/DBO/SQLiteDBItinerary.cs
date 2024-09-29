@@ -27,8 +27,9 @@ namespace TicketHelper.DBO
 
         public void DropTable() => base.DropTable();
 
-        public List<T> QueryTable() => base.QueryTable().ToList();
+        public List<T> QueryTable() => base.QueryTable();
         //public Task<TableQuery<T>> QueryTable() => base.QueryTable();
+
 
         public List<T> QueryTable(params object[] args)
         {
@@ -52,7 +53,6 @@ namespace TicketHelper.DBO
 
             return base.QueryTable(sql, objs.ToArray());
         }
-
         public List<T> QueryTableByTicketType(string ticketType)
         {
             var sql = @"SELECT * FROM Itinerary  WHERE TicketType=?";
