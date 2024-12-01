@@ -15,7 +15,7 @@ namespace TicketHelper.DBO
 
         public int Delete(T t) => base.Delete(t);
 
-        public int DeleteList(List<T> list)=>base.DeleteList(list);
+        public int DeleteList(List<T> list) => base.DeleteList(list);
 
         public int DeleteAll() => base.DeleteAll();
 
@@ -35,23 +35,20 @@ namespace TicketHelper.DBO
         {
             var sql = @"SELECT * FROM Itinerary  WHERE StartDate>=? AND  StartDate<=? ";
             var objs = new List<object>() { args[0], args[1] };
-            if (!args[2].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[2].ToString()))
             {
-                sql += @"AND CityName=? ";
-                objs.Add(args[2]);
+                sql += @" AND CityName IN(" + args[2].ToString() + ")";
             }
-            if (!args[3].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[3].ToString()))
             {
-                sql += @"AND CompanyType=? ";
-                objs.Add(args[3]);
+                sql += @" AND CompanyType IN(" + args[3].ToString() + ")";
             }
-            if (!args[4].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[4].ToString()))
             {
-                sql += @"AND TicketType=? ";
-                objs.Add(args[4]);
+                sql += @" AND TicketType IN(" + args[4].ToString() + ")";
             }
 
-            return base.QueryTable(sql, objs.ToArray());
+            return base.QueryTable(sql, objs.ToArray()).ToList();
         }
         public List<T> QueryTableByTicketType(string ticketType)
         {

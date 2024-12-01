@@ -8,7 +8,7 @@
 
         public static List<string> CompanyList =
         [
-            "全部","滴滴","高德","高铁","飞机","其他"
+            "滴滴","高德","高铁","航空","其他"
         ];
     }
 }

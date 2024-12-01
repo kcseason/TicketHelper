@@ -26,14 +26,14 @@ namespace TicketHelper.DBO
         {
             var sql = @"SELECT * FROM Hotel  WHERE StartDate>=? AND  StartDate<=? ";
             var objs = new List<object>() { args[0], args[1] };
-            if (!args[2].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[2].ToString()))
             {
-                sql += @"AND CityName=? ";
+                sql += @"AND CityName IN(?) ";
                 objs.Add(args[2]);
             }
-            if (!args[3].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[3].ToString()))
             {
-                sql += @"AND FeeType=? ";
+                sql += @"AND FeeType IN(?) ";
                 objs.Add(args[3]);
             }
 

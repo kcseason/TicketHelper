@@ -127,7 +127,8 @@ namespace TicketHelper
                             itinerary.HasTicket = "有";
                         }
 
-                        itinerary.StartDate = Convert.ToDateTime(date);
+                        //itinerary.StartDate = Convert.ToDateTime(date);
+                        itinerary.StartDate = date;
                         itinerary.Cost = Convert.ToDecimal(cost);
                         itinerary.CompanyType = company;
                         itinerary.CityName = location;

@@ -1,9 +1,9 @@
 using LoadingIndicator.WinForms;
 using TicketHelper.DBO;
-using TicketHelper.Enum;
 using TicketHelper.Handler;
 using TicketHelper.Model;
 using TicketHelper.String;
+using TicketHelper.TicketEnum;
 
 namespace TicketHelper
 {
@@ -14,6 +14,10 @@ namespace TicketHelper
         private LongOperation _longOperation;
 
         private CurrentModule currentModuel = CurrentModule.None;
+        private Dictionary<string, object> CurrentListDic = new Dictionary<string, object>();
+        private List<Itinerary> CurrentItineraryList = new List<Itinerary>();
+        private List<Hotel> CurrentHotelList = new List<Hotel>();
+        private List<HospitalPatient> CurrentHospitalPatientList = new List<HospitalPatient>();
         public MainForm()
         {
             InitializeComponent();
@@ -31,6 +35,7 @@ namespace TicketHelper
         {
             InitSearchPanel();
             IsLoad = false;
+            this.Focus();
         }
 
         private void tdb_Run_Click(object sender, EventArgs e)
@@ -43,62 +48,146 @@ namespace TicketHelper
 
         private void InitSearchPanel()
         {
-            cbCity.DataSource = CityName.CityList;
-            cbCompany.DataSource = CompanyType.CompanyList;
+            cbCity.Nodes.Clear();
+            CityName.CityList.ForEach(city => { cbCity.Nodes.Add(city); });
 
-            if (currentModuel == CurrentModule.Traffic)
-                cbTicketType.DataSource = TicketType.TicketTypes;
+            cbCompany.Nodes.Clear();
+            CompanyType.CompanyList.ForEach(com => { cbCompany.Nodes.Add(com); });
+
+            cbTicketType.Nodes.Clear();
+            if (currentModuel == CurrentModule.Itinerary)
+                TicketType.TicketTypes.ForEach(ticket => { cbTicketType.Nodes.Add(ticket); });
             else
-                cbTicketType.DataSource = FeeType.HotelFeeTypes;
+                FeeType.HotelFeeTypes.ForEach(fee => { cbTicketType.Nodes.Add(fee); });
 
-            //cbTicketType.DataSource = currentModuel == CurrentModule.Traffic ? TicketType.TicketTypes :
-            //    (currentModuel == CurrentModule.Hotel ? FeeType.HotelFeeTypes : FeeType.HotelFeeTypes);
+            switch (currentModuel)
+            {
+                case CurrentModule.Itinerary: cbCalcTotal.DataSource = CalcTotalType.ItineraryTypes; break;
+                case CurrentModule.Hotel: cbCalcTotal.DataSource = CalcTotalType.HotelTypes; break;
+                case CurrentModule.Hospital: cbCalcTotal.DataSource = CalcTotalType.HospitalPatientTypes; break;
+                default: break;
+            }
         }
+
         private void Search(object sender, EventArgs e)
         {
             if (IsLoad)
                 return;
 
-            if (currentModuel == CurrentModule.Traffic)
+            if (currentModuel == CurrentModule.Itinerary)
             {
-                DateTime start = dtStart.Value.Date;
-                DateTime end = dtEnd.Value.Date;
-                var city = cbCity.Text;
-                var company = cbCompany.Text;
-                var ticketType = cbTicketType.Text;
+                string start = dtStart.Value.Date.ToString("yyyy-MM-dd");
+                string end = dtEnd.Value.Date.ToString("yyyy-MM-dd");
+                var city = cbCity.Text.Split(";").ToList().Where(x => !string.IsNullOrEmpty(x.Trim())).Select(y => "'" + y.Trim() + "'").ToList();
+                var cityStr = string.Join(",", city);
+                var company = cbCompany.Text.Split(";").ToList().Where(x => !string.IsNullOrEmpty(x.Trim())).Select(y => "'" + y.Trim() + "'").ToList();
+                var companyStr = string.Join(",", company);
+                var ticketType = cbTicketType.Text.Split(";").ToList().Where(x => !string.IsNullOrEmpty(x.Trim())).Select(y => "'" + y.Trim() + "'").ToList();
+                var ticketTypeStr = string.Join(",", ticketType);
 
-                var pams = new object[] { start, end, city, company, ticketType };
+                var pams = new object[] { start, end, cityStr, companyStr, ticketTypeStr };
                 var list = new SQLiteDBItinerary<Itinerary>().QueryTable(pams);
-                GvItinerary.DataSource = list;
 
+                if (!CurrentListDic.ContainsKey("Itinerary"))
+                    CurrentListDic.Add("Itinerary", list);
+                else
+                    CurrentListDic["Itinerary"] = list;
+
+                GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+                lbCount.Text = list.Count().ToString();
             }
+
             if (currentModuel == CurrentModule.Hotel)
             {
-                DateTime start = dtStart.Value.Date;
-                DateTime end = dtEnd.Value.Date;
+                string start = dtStart.Value.Date.ToString("yyyy-MM-dd");
+                string end = dtEnd.Value.Date.ToString("yyyy-MM-dd");
                 var city = cbCity.Text;
                 var feeType = cbTicketType.Text;
 
                 var pams = new object[] { start, end, city, feeType };
                 var list = new SQLiteDBHotel<Hotel>().QueryTable(pams);
-                GvItinerary.DataSource = list;
 
+                if (!CurrentListDic.ContainsKey("Hotel"))
+                    CurrentListDic.Add("Hotel", list);
+                else
+                    CurrentListDic["Hotel"] = list;
+
+                GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+                lbCount.Text = list.Count().ToString();
             }
             if (currentModuel == CurrentModule.Hospital)
             {
-                DateTime start = dtStart.Value.Date;
-                DateTime end = dtEnd.Value.Date;
+                string start = dtStart.Value.Date.ToString("yyyy-MM-dd");
+                string end = dtEnd.Value.Date.ToString("yyyy-MM-dd");
                 var city = cbCity.Text;
                 var company = cbCompany.Text;
                 var ticketType = cbTicketType.Text;
 
                 var pams = new object[] { start, end, city, company, ticketType };
                 var list = new SQLiteDBHospitalPatient<HospitalPatient>().QueryTable(pams);
-                GvItinerary.DataSource = list;
 
+                if (!CurrentListDic.ContainsKey("HospitalPatient"))
+                    CurrentListDic.Add("HospitalPatient", list);
+                else
+                    CurrentListDic["HospitalPatient"] = list;
+
+                GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
+                lbCount.Text = list.Count().ToString();
+            }
+
+            CalcTotal(null, null);
+        }
+
+        private void CalcTotal(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(cbCalcTotal.Text))
+                return;
+
+            var modelName = Enum.GetName(currentModuel);
+            var list = currentModuel == CurrentModule.Itinerary ? CurrentListDic[modelName] as List<Itinerary> : null;
+
+            if (cbCalcTotal.Text.Equals(CalcTotalType.Year))
+            {
+                var calcResult = list.GroupBy(item => (DateTime.Parse(item.StartDate)).Year).Select(group => new { StartDate = group.Key + "年", Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
+            }
+            if (cbCalcTotal.Text.Equals(CalcTotalType.Month))
+            {
+                var calcResult = list.GroupBy(item => (DateTime.Parse(item.StartDate)).ToString("yyyy年-MM月")).Select(group => new { StartDate = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
+            }
+            if (cbCalcTotal.Text.Equals(CalcTotalType.Company))
+            {
+                var calcResult = list.GroupBy(item => item.CompanyType).Select(group => new { CompanyType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
+            }
+            if (cbCalcTotal.Text.Equals(CalcTotalType.City))
+            {
+                var calcResult = list.GroupBy(item => item.CityName).Select(group => new { CityName = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
+            }
+            if (cbCalcTotal.Text.Equals(CalcTotalType.Ticket))
+            {
+                var calcResult = list.GroupBy(item => item.TicketType).Select(group => new { TicketType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
             }
         }
 
@@ -122,8 +211,63 @@ namespace TicketHelper
         /// <param name="e"></param>
         private void GvItinerary_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
-            if (currentModuel == CurrentModule.Traffic)
+            if (currentModuel == CurrentModule.Itinerary)
             {
+                if (!string.IsNullOrEmpty(cbCalcTotal.Text))
+                {
+                    if (cbCalcTotal.Text.Equals(CalcTotalType.Year))
+                    {
+                        GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
+                        GvItinerary.Columns["StartDate"].DisplayIndex = 0;
+                        GvItinerary.Columns["StartDate"].Width = 250;
+                        GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.Month))
+                    {
+                        GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
+                        GvItinerary.Columns["StartDate"].DisplayIndex = 0;
+                        GvItinerary.Columns["StartDate"].Width = 250;
+                        GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.Company))
+                    {
+                        GvItinerary.Columns["CompanyType"].HeaderText = "出行公司";
+                        GvItinerary.Columns["CompanyType"].DisplayIndex = 0;
+                        GvItinerary.Columns["CompanyType"].Width = 250;
+                        GvItinerary.Columns["CompanyType"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.City))
+                    {
+                        GvItinerary.Columns["CityName"].HeaderText = "城市";
+                        GvItinerary.Columns["CityName"].DisplayIndex = 0;
+                        GvItinerary.Columns["CityName"].Width = 250;
+                        GvItinerary.Columns["CityName"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.Ticket))
+                    {
+                        GvItinerary.Columns["TicketType"].HeaderText = "票类";
+                        GvItinerary.Columns["TicketType"].DisplayIndex = 0;
+                        GvItinerary.Columns["TicketType"].Width = 250;
+                        GvItinerary.Columns["TicketType"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    return;
+                }
+
                 //设置显示的列名
                 GvItinerary.Columns["Id"].Visible = false;
                 GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
@@ -314,7 +458,7 @@ namespace TicketHelper
 
         private void tsbTraffic_Click(object sender, EventArgs e)
         {
-            currentModuel = CurrentModule.Traffic;
+            currentModuel = CurrentModule.Itinerary;
             ShowCondition();
             ShowData();
         }
@@ -332,34 +476,14 @@ namespace TicketHelper
         }
         private void ShowData()
         {
-            if (currentModuel == CurrentModule.Traffic)
-            {
-                GvItinerary.DataSource = null;
-                var list = new SQLiteDBItinerary<Itinerary>().QueryTable();
-                GvItinerary.DataSource = list;
-                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
-            }
-            if (currentModuel == CurrentModule.Hotel)
-            {
-                GvItinerary.DataSource = null;
-                var list = new SQLiteDBHotel<Hotel>().QueryTable();
-                GvItinerary.DataSource = list;
-                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
-            }
-            if (currentModuel == CurrentModule.Hospital)
-            {
-                GvItinerary.DataSource = null;
-                var list = new SQLiteDBHospitalPatient<HospitalPatient>().QueryTable();
-                GvItinerary.DataSource = list;
-                tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
-            }
+            Search(null, null);
         }
 
         private void ShowCondition()
         {
             InitSearchPanel();
-            lbCompany.Visible = (currentModuel == CurrentModule.Traffic);
-            cbCompany.Visible = (currentModuel == CurrentModule.Traffic);
+            lbCompany.Visible = (currentModuel == CurrentModule.Itinerary);
+            //cbCompany.Visible = (currentModuel == CurrentModule.Traffic);
         }
 
         /// <summary>

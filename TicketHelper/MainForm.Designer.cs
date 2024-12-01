@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tsbTraffic = new ToolStripButton();
             tsbHotel = new ToolStripButton();
@@ -39,17 +39,22 @@
             初始化ToolStripMenuItem = new ToolStripMenuItem();
             交通出行ToolStripMenuItem = new ToolStripMenuItem();
             splitContainer1 = new SplitContainer();
+            label6 = new Label();
+            lbCount = new TextBox();
+            label9 = new Label();
+            label7 = new Label();
+            cbTicketType = new Sunny.UI.UIComboTreeView();
+            cbCompany = new Sunny.UI.UIComboTreeView();
+            cbCity = new Sunny.UI.UIComboTreeView();
+            cbCalcTotal = new ComboBox();
             label8 = new Label();
-            cbTicketType = new ComboBox();
             lbTicketType = new Label();
-            cbCompany = new ComboBox();
             lbCompany = new Label();
             label5 = new Label();
             dtEnd = new DateTimePicker();
             label4 = new Label();
             dtStart = new DateTimePicker();
             label3 = new Label();
-            cbCity = new ComboBox();
             label2 = new Label();
             tbTotalMoney = new TextBox();
             label1 = new Label();
@@ -68,7 +73,7 @@
             toolStrip1.Items.AddRange(new ToolStripItem[] { tsbTraffic, tsbHotel, tsbHospital, tsbExport, toolStripButton2 });
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(1827, 33);
+            toolStrip1.Size = new Size(2138, 33);
             toolStrip1.TabIndex = 0;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -141,17 +146,22 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(label8);
+            splitContainer1.Panel1.Controls.Add(label6);
+            splitContainer1.Panel1.Controls.Add(lbCount);
+            splitContainer1.Panel1.Controls.Add(label9);
+            splitContainer1.Panel1.Controls.Add(label7);
             splitContainer1.Panel1.Controls.Add(cbTicketType);
-            splitContainer1.Panel1.Controls.Add(lbTicketType);
             splitContainer1.Panel1.Controls.Add(cbCompany);
+            splitContainer1.Panel1.Controls.Add(cbCity);
+            splitContainer1.Panel1.Controls.Add(cbCalcTotal);
+            splitContainer1.Panel1.Controls.Add(label8);
+            splitContainer1.Panel1.Controls.Add(lbTicketType);
             splitContainer1.Panel1.Controls.Add(lbCompany);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(dtEnd);
             splitContainer1.Panel1.Controls.Add(label4);
             splitContainer1.Panel1.Controls.Add(dtStart);
             splitContainer1.Panel1.Controls.Add(label3);
-            splitContainer1.Panel1.Controls.Add(cbCity);
             splitContainer1.Panel1.Controls.Add(label2);
             splitContainer1.Panel1.Controls.Add(tbTotalMoney);
             splitContainer1.Panel1.Controls.Add(label1);
@@ -159,53 +169,143 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(GvItinerary);
-            splitContainer1.Size = new Size(1827, 1085);
+            splitContainer1.Size = new Size(2138, 1085);
             splitContainer1.SplitterDistance = 70;
             splitContainer1.SplitterWidth = 1;
             splitContainer1.TabIndex = 1;
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(1965, 25);
+            label6.Name = "label6";
+            label6.Size = new Size(28, 24);
+            label6.TabIndex = 26;
+            label6.Text = "条";
+            // 
+            // lbCount
+            // 
+            lbCount.BackColor = Color.White;
+            lbCount.Location = new Point(1885, 22);
+            lbCount.Name = "lbCount";
+            lbCount.ReadOnly = true;
+            lbCount.Size = new Size(80, 30);
+            lbCount.TabIndex = 25;
+            lbCount.TextAlign = HorizontalAlignment.Right;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(1840, 23);
+            label9.Name = "label9";
+            label9.Size = new Size(46, 24);
+            label9.TabIndex = 24;
+            label9.Text = "记录";
+            // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(1386, 24);
+            label7.Name = "label7";
+            label7.Size = new Size(46, 24);
+            label7.TabIndex = 23;
+            label7.Text = "统计";
+            // 
+            // cbTicketType
+            // 
+            cbTicketType.CausesValidation = false;
+            cbTicketType.CheckBoxes = true;
+            cbTicketType.DropDownHeight = 250;
+            cbTicketType.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            cbTicketType.FillColor = Color.White;
+            cbTicketType.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            cbTicketType.Location = new Point(1150, 18);
+            cbTicketType.Margin = new Padding(4, 5, 4, 5);
+            cbTicketType.MinimumSize = new Size(63, 0);
+            cbTicketType.Name = "cbTicketType";
+            cbTicketType.Padding = new Padding(0, 0, 30, 2);
+            cbTicketType.ShowClearButton = true;
+            cbTicketType.Size = new Size(220, 34);
+            cbTicketType.SymbolSize = 24;
+            cbTicketType.TabIndex = 22;
+            cbTicketType.TextAlignment = ContentAlignment.MiddleLeft;
+            cbTicketType.Watermark = "";
+            cbTicketType.TextChanged += Search;
+            // 
+            // cbCompany
+            // 
+            cbCompany.CausesValidation = false;
+            cbCompany.CheckBoxes = true;
+            cbCompany.DropDownHeight = 250;
+            cbCompany.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            cbCompany.FillColor = Color.White;
+            cbCompany.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            cbCompany.Location = new Point(876, 19);
+            cbCompany.Margin = new Padding(4, 5, 4, 5);
+            cbCompany.MinimumSize = new Size(63, 0);
+            cbCompany.Name = "cbCompany";
+            cbCompany.Padding = new Padding(0, 0, 30, 2);
+            cbCompany.ShowClearButton = true;
+            cbCompany.Size = new Size(220, 34);
+            cbCompany.SymbolSize = 24;
+            cbCompany.TabIndex = 21;
+            cbCompany.TextAlignment = ContentAlignment.MiddleLeft;
+            cbCompany.Watermark = "";
+            cbCompany.TextChanged += Search;
+            // 
+            // cbCity
+            // 
+            cbCity.CausesValidation = false;
+            cbCity.CheckBoxes = true;
+            cbCity.DropDownHeight = 250;
+            cbCity.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
+            cbCity.FillColor = Color.White;
+            cbCity.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            cbCity.Location = new Point(602, 19);
+            cbCity.Margin = new Padding(4, 5, 4, 5);
+            cbCity.MinimumSize = new Size(63, 0);
+            cbCity.Name = "cbCity";
+            cbCity.Padding = new Padding(0, 0, 30, 2);
+            cbCity.ShowClearButton = true;
+            cbCity.Size = new Size(220, 34);
+            cbCity.SymbolSize = 24;
+            cbCity.TabIndex = 20;
+            cbCity.TextAlignment = ContentAlignment.MiddleLeft;
+            cbCity.Watermark = "";
+            cbCity.TextChanged += Search;
+            // 
+            // cbCalcTotal
+            // 
+            cbCalcTotal.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCalcTotal.FormattingEnabled = true;
+            cbCalcTotal.Location = new Point(1434, 20);
+            cbCalcTotal.Name = "cbCalcTotal";
+            cbCalcTotal.Size = new Size(151, 32);
+            cbCalcTotal.TabIndex = 16;
+            cbCalcTotal.SelectedIndexChanged += CalcTotal;
+            // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(1444, 27);
+            label8.Location = new Point(1791, 26);
             label8.Name = "label8";
             label8.Size = new Size(28, 24);
             label8.TabIndex = 13;
             label8.Text = "元";
             // 
-            // cbTicketType
-            // 
-            cbTicketType.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbTicketType.FormattingEnabled = true;
-            cbTicketType.Location = new Point(1042, 19);
-            cbTicketType.Name = "cbTicketType";
-            cbTicketType.Size = new Size(150, 32);
-            cbTicketType.TabIndex = 12;
-            cbTicketType.SelectedIndexChanged += Search;
-            // 
             // lbTicketType
             // 
             lbTicketType.AutoSize = true;
-            lbTicketType.Location = new Point(991, 23);
+            lbTicketType.Location = new Point(1102, 24);
             lbTicketType.Name = "lbTicketType";
             lbTicketType.Size = new Size(46, 24);
             lbTicketType.TabIndex = 11;
             lbTicketType.Text = "票类";
             // 
-            // cbCompany
-            // 
-            cbCompany.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbCompany.FormattingEnabled = true;
-            cbCompany.Location = new Point(826, 20);
-            cbCompany.Name = "cbCompany";
-            cbCompany.Size = new Size(150, 32);
-            cbCompany.TabIndex = 10;
-            cbCompany.SelectedIndexChanged += Search;
-            // 
             // lbCompany
             // 
             lbCompany.AutoSize = true;
-            lbCompany.Location = new Point(775, 24);
+            lbCompany.Location = new Point(828, 24);
             lbCompany.Name = "lbCompany";
             lbCompany.Size = new Size(46, 24);
             lbCompany.TabIndex = 9;
@@ -255,20 +355,10 @@
             label3.TabIndex = 4;
             label3.Text = "开始时间";
             // 
-            // cbCity
-            // 
-            cbCity.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbCity.FormattingEnabled = true;
-            cbCity.Location = new Point(609, 21);
-            cbCity.Name = "cbCity";
-            cbCity.Size = new Size(150, 32);
-            cbCity.TabIndex = 3;
-            cbCity.SelectedIndexChanged += Search;
-            // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(558, 25);
+            label2.Location = new Point(554, 25);
             label2.Name = "label2";
             label2.Size = new Size(46, 24);
             label2.TabIndex = 2;
@@ -276,7 +366,8 @@
             // 
             // tbTotalMoney
             // 
-            tbTotalMoney.Location = new Point(1311, 21);
+            tbTotalMoney.BackColor = Color.White;
+            tbTotalMoney.Location = new Point(1658, 21);
             tbTotalMoney.Name = "tbTotalMoney";
             tbTotalMoney.ReadOnly = true;
             tbTotalMoney.Size = new Size(133, 30);
@@ -286,7 +377,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(1264, 24);
+            label1.Location = new Point(1611, 24);
             label1.Name = "label1";
             label1.Size = new Size(46, 24);
             label1.TabIndex = 0;
@@ -296,14 +387,14 @@
             // 
             GvItinerary.AllowUserToOrderColumns = true;
             GvItinerary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Window;
-            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
-            GvItinerary.DefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            GvItinerary.DefaultCellStyle = dataGridViewCellStyle2;
             GvItinerary.Dock = DockStyle.Fill;
             GvItinerary.Location = new Point(0, 0);
             GvItinerary.Name = "GvItinerary";
@@ -311,7 +402,7 @@
             GvItinerary.RowHeadersWidth = 62;
             GvItinerary.RowTemplate.Height = 35;
             GvItinerary.RowTemplate.ReadOnly = true;
-            GvItinerary.Size = new Size(1827, 1014);
+            GvItinerary.Size = new Size(2138, 1014);
             GvItinerary.TabIndex = 0;
             GvItinerary.CellPainting += dataGridView1_CellPainting;
             GvItinerary.ColumnHeaderMouseClick += GvItinerary_ColumnHeaderMouseClick;
@@ -321,7 +412,7 @@
             // 
             AutoScaleDimensions = new SizeF(11F, 24F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1827, 1118);
+            ClientSize = new Size(2138, 1118);
             Controls.Add(splitContainer1);
             Controls.Add(toolStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -349,16 +440,13 @@
         private DataGridView GvItinerary;
         private TextBox tbTotalMoney;
         private Label label1;
-        private ComboBox cbCity;
         private Label label2;
         private Label label3;
         private DateTimePicker dtEnd;
         private Label label4;
         private DateTimePicker dtStart;
         private Label label5;
-        private ComboBox cbCompany;
         private Label lbCompany;
-        private ComboBox cbTicketType;
         private Label lbTicketType;
         private Label label8;
         private ToolStripButton tsbTraffic;
@@ -368,5 +456,13 @@
         private ToolStripDropDownButton toolStripButton2;
         private ToolStripMenuItem 初始化ToolStripMenuItem;
         private ToolStripMenuItem 交通出行ToolStripMenuItem;
+        private ComboBox cbCalcTotal;
+        private Sunny.UI.UIComboTreeView cbCity;
+        private Sunny.UI.UIComboTreeView cbCompany;
+        private Sunny.UI.UIComboTreeView cbTicketType;
+        private Label label7;
+        private Label label6;
+        private TextBox lbCount;
+        private Label label9;
     }
 }

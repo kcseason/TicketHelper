@@ -24,16 +24,16 @@ namespace TicketHelper.DBO
         public List<T> QueryTable() => base.QueryTable();
         public List<T> QueryTable(params object[] args)
         {
-            var sql = @"SELECT * FROM Hospital  WHERE StartDate>=? AND  StartDate<=? ";
+            var sql = @"SELECT * FROM HospitalPatient  WHERE StartDate>=? AND  StartDate<=? ";
             var objs = new List<object>() { args[0], args[1] };
-            if (!args[2].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[2].ToString()))
             {
-                sql += @"AND CityName=? ";
+                sql += @"AND CityName IN(?) ";
                 objs.Add(args[2]);
             }
-            if (!args[4].ToString().Equals("全部"))
+            if (!string.IsNullOrEmpty(args[3].ToString()))
             {
-                sql += @"AND TicketType=? ";
+                sql += @"AND TicketType IN(?)";
                 objs.Add(args[4]);
             }
 

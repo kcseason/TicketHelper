@@ -1,9 +1,9 @@
-﻿namespace TicketHelper.Enum
+﻿namespace TicketHelper.TicketEnum
 {
     internal enum CurrentModule
     {
         None,
-        Traffic,
+        Itinerary,
         Hotel,
         Hospital
     }

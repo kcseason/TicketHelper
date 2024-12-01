@@ -52,7 +52,8 @@ namespace TicketHelper
                 foreach (var item in itineraryList)
                 {
                     currentRow++;
-                    worksheet.Cell(currentRow, 1).Value = item.StartDate.ToString("yyyy-MM-dd");
+                    //worksheet.Cell(currentRow, 1).Value = item.StartDate.ToString("yyyy-MM-dd");
+                    worksheet.Cell(currentRow, 1).Value = item.StartDate;
                     worksheet.Cell(currentRow, 2).Value = item.CityName;
                     worksheet.Cell(currentRow, 3).Value = item.Start;
                     worksheet.Cell(currentRow, 4).Value = item.End;
@@ -104,8 +105,10 @@ namespace TicketHelper
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = item.CityName;
                     worksheet.Cell(currentRow, 2).Value = item.HotelName;
-                    worksheet.Cell(currentRow, 3).Value = item.StartDate.ToString("yyyy-MM-dd");
-                    worksheet.Cell(currentRow, 4).Value = item.EndDate.ToString("yyyy-MM-dd"); ;
+                    //worksheet.Cell(currentRow, 3).Value = item.StartDate.ToString("yyyy-MM-dd");
+                    //worksheet.Cell(currentRow, 4).Value = item.EndDate.ToString("yyyy-MM-dd"); 
+                    worksheet.Cell(currentRow, 3).Value = item.StartDate;
+                    worksheet.Cell(currentRow, 4).Value = item.EndDate;
                     worksheet.Cell(currentRow, 5).Value = item.Cost;
                     worksheet.Cell(currentRow, 6).Value = item.HasETicket;
                     worksheet.Cell(currentRow, 7).Value = item.HasTicket;
@@ -154,8 +157,10 @@ namespace TicketHelper
                 {
                     currentRow++;
                     worksheet.Cell(currentRow, 1).Value = item.CityName;
-                    worksheet.Cell(currentRow, 3).Value = item.StartDate.ToString("yyyy-MM-dd");
-                    worksheet.Cell(currentRow, 4).Value = item.EndDate.ToString("yyyy-MM-dd");
+                    //worksheet.Cell(currentRow, 3).Value = item.StartDate.ToString("yyyy-MM-dd");
+                    //worksheet.Cell(currentRow, 4).Value = item.EndDate.ToString("yyyy-MM-dd");
+                    worksheet.Cell(currentRow, 3).Value = item.StartDate;
+                    worksheet.Cell(currentRow, 4).Value = item.EndDate;
                     worksheet.Cell(currentRow, 1).Value = item.HospitalName;
                     worksheet.Cell(currentRow, 1).Value = item.PatientType;
                     worksheet.Cell(currentRow, 1).Value = item.HasPatientRecord;
