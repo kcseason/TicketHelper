@@ -21,6 +21,7 @@ namespace TicketHelper
                 var worksheet3 = workbook.Worksheets.Add(titleList[2]);
                 ExportHospital(dataList[2], worksheet3);
 
+                AutoFitColumns(new List<IXLWorksheet> { worksheet1, worksheet2, worksheet3 });
                 // 保存Excel文件
                 workbook.SaveAs(filePath);
             }
@@ -33,7 +34,7 @@ namespace TicketHelper
                 var itineraryList = list.Cast<T>().Cast<Itinerary>();
                 int currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "合计：";
-                worksheet.Cell(currentRow, 2).Value = itineraryList.Sum(x => x.Cost).ToString(); ;
+                worksheet.Cell(currentRow, 2).Value = itineraryList.Sum(x => x.Cost).ToString() + " 元";
                 currentRow++;
                 // 添加标题行
                 worksheet.Cell(currentRow, 1).Value = "行程日期";
@@ -87,7 +88,7 @@ namespace TicketHelper
                 var hotelList = list.Cast<T>().Cast<Hotel>();
                 int currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "合计：";
-                worksheet.Cell(currentRow, 2).Value = hotelList.Sum(x => x.Cost).ToString(); ;
+                worksheet.Cell(currentRow, 2).Value = hotelList.Sum(x => x.Cost).ToString() + " 元";
                 currentRow++;
                 // 添加标题行
                 worksheet.Cell(currentRow, 1).Value = "城市";
@@ -184,6 +185,15 @@ namespace TicketHelper
             }
 
             return true;
+        }
+
+        private static void AutoFitColumns(List<IXLWorksheet> sheets)
+        {
+            sheets.ForEach(sheet =>
+            {
+                // 自动调整列宽
+                sheet.Columns().AdjustToContents();
+            });
         }
 
         public static void OpenExcel(string filePath)
