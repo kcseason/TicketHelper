@@ -9,6 +9,7 @@ namespace TicketHelper.Model
         public string CityName { get; set; }
         public string? StartDate { get; set; }
         public string?  EndDate { get; set; }
+        public decimal Cost { get; set; }
         public string? FeeType { get; set; }
         public string? Remark { get; set; }
     }

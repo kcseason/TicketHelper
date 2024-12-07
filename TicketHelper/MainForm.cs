@@ -56,9 +56,15 @@ namespace TicketHelper
 
             cbTicketType.Nodes.Clear();
             if (currentModuel == CurrentModule.Itinerary)
+            {
                 TicketType.TicketTypes.ForEach(ticket => { cbTicketType.Nodes.Add(ticket); });
+                lbTicketType.Text = "票类";
+            }
             else
+            {
                 FeeType.HotelFeeTypes.ForEach(fee => { cbTicketType.Nodes.Add(fee); });
+                lbTicketType.Text = "类别";
+            }
 
             switch (currentModuel)
             {
@@ -93,7 +99,8 @@ namespace TicketHelper
                 else
                     CurrentListDic["Itinerary"] = list;
 
-                GvItinerary.DataSource = list;
+                if (string.IsNullOrEmpty(cbCalcTotal.Text.Trim()))
+                    GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
                 lbCount.Text = list.Count().ToString();
             }
@@ -102,10 +109,12 @@ namespace TicketHelper
             {
                 string start = dtStart.Value.Date.ToString("yyyy-MM-dd");
                 string end = dtEnd.Value.Date.ToString("yyyy-MM-dd");
-                var city = cbCity.Text;
-                var feeType = cbTicketType.Text;
+                var city = cbCity.Text.Split(";").ToList().Where(x => !string.IsNullOrEmpty(x.Trim())).Select(y => "'" + y.Trim() + "'").ToList();
+                var cityStr = string.Join(",", city);
+                var feeType = cbTicketType.Text.Split(";").ToList().Where(x => !string.IsNullOrEmpty(x.Trim())).Select(y => "'" + y.Trim() + "'").ToList();
+                var feeTypeStr = string.Join(",", feeType);
 
-                var pams = new object[] { start, end, city, feeType };
+                var pams = new object[] { start, end, cityStr, feeTypeStr };
                 var list = new SQLiteDBHotel<Hotel>().QueryTable(pams);
 
                 if (!CurrentListDic.ContainsKey("Hotel"))
@@ -113,7 +122,8 @@ namespace TicketHelper
                 else
                     CurrentListDic["Hotel"] = list;
 
-                GvItinerary.DataSource = list;
+                if (string.IsNullOrEmpty(cbCalcTotal.Text.Trim()))
+                    GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
                 lbCount.Text = list.Count().ToString();
             }
@@ -133,7 +143,8 @@ namespace TicketHelper
                 else
                     CurrentListDic["HospitalPatient"] = list;
 
-                GvItinerary.DataSource = list;
+                if (string.IsNullOrEmpty(cbCalcTotal.Text.Trim()))
+                    GvItinerary.DataSource = list;
                 tbTotalMoney.Text = list.Sum(x => x.Cost).ToString();
                 lbCount.Text = list.Count().ToString();
             }
@@ -147,11 +158,26 @@ namespace TicketHelper
                 return;
 
             var modelName = Enum.GetName(currentModuel);
-            var list = currentModuel == CurrentModule.Itinerary ? CurrentListDic[modelName] as List<Itinerary> : null;
+            IEnumerable<ModelBase>? list = null;
+            if (currentModuel == CurrentModule.Itinerary)
+            {
+                list = new List<Itinerary>();
+                list = CurrentListDic[modelName] as List<Itinerary>;
+            }
+            if (currentModuel == CurrentModule.Hotel)
+            {
+                list = new List<Itinerary>();
+                list = CurrentListDic[modelName] as List<Hotel>;
+            }
+            if (currentModuel == CurrentModule.Hospital)
+            {
+                list = new List<Itinerary>();
+                list = CurrentListDic[modelName] as List<HospitalPatient>;
+            }
 
             if (cbCalcTotal.Text.Equals(CalcTotalType.Year))
             {
-                var calcResult = list.GroupBy(item => (DateTime.Parse(item.StartDate)).Year).Select(group => new { StartDate = group.Key + "年", Cost = group.Sum(item => item.Cost) }).ToList();
+                var calcResult = list.ToList().GroupBy(item => (DateTime.Parse(item.StartDate)).Year).Select(group => new { StartDate = group.Key + "年", Cost = group.Sum(item => item.Cost) }).ToList();
 
                 GvItinerary.DataSource = null;
                 GvItinerary.DataSource = calcResult;
@@ -167,10 +193,11 @@ namespace TicketHelper
             }
             if (cbCalcTotal.Text.Equals(CalcTotalType.Company))
             {
-                var calcResult = list.GroupBy(item => item.CompanyType).Select(group => new { CompanyType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+                List<Itinerary> list2 = list as List<Itinerary>;
+                var calcResult = list2.GroupBy(item => item.CompanyType).Select(group => new { CompanyType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
 
                 GvItinerary.DataSource = null;
-                GvItinerary.DataSource = calcResult;
+                GvItinerary.DataSource = calcResult.OrderByDescending(item => item.Cost).ToList(); ;
                 tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
             }
             if (cbCalcTotal.Text.Equals(CalcTotalType.City))
@@ -178,15 +205,25 @@ namespace TicketHelper
                 var calcResult = list.GroupBy(item => item.CityName).Select(group => new { CityName = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
 
                 GvItinerary.DataSource = null;
-                GvItinerary.DataSource = calcResult;
+                GvItinerary.DataSource = calcResult.OrderByDescending(item => item.Cost).ToList();
                 tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
             }
             if (cbCalcTotal.Text.Equals(CalcTotalType.Ticket))
             {
-                var calcResult = list.GroupBy(item => item.TicketType).Select(group => new { TicketType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+                List<Itinerary> list2 = list as List<Itinerary>;
+                var calcResult = list2.GroupBy(item => item.TicketType).Select(group => new { TicketType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
 
                 GvItinerary.DataSource = null;
-                GvItinerary.DataSource = calcResult;
+                GvItinerary.DataSource = calcResult.OrderByDescending(item => item.Cost).ToList(); ;
+                tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
+            }
+            if (cbCalcTotal.Text.Equals(CalcTotalType.FeeType))
+            {
+                List<Hotel> list2 = list as List<Hotel>;
+                var calcResult = list2.GroupBy(item => item.FeeType).Select(group => new { FeeType = group.Key, Cost = group.Sum(item => item.Cost) }).ToList();
+
+                GvItinerary.DataSource = null;
+                GvItinerary.DataSource = calcResult.OrderByDescending(item => item.Cost).ToList(); ;
                 tbTotalMoney.Text = calcResult.Sum(x => x.Cost).ToString();
             }
         }
@@ -298,6 +335,51 @@ namespace TicketHelper
             }
             if (currentModuel == CurrentModule.Hotel)
             {
+                if (!string.IsNullOrEmpty(cbCalcTotal.Text))
+                {
+                    if (cbCalcTotal.Text.Equals(CalcTotalType.Year))
+                    {
+                        GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
+                        GvItinerary.Columns["StartDate"].DisplayIndex = 0;
+                        GvItinerary.Columns["StartDate"].Width = 250;
+                        GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.Month))
+                    {
+                        GvItinerary.Columns["StartDate"].HeaderText = "行程日期";
+                        GvItinerary.Columns["StartDate"].DisplayIndex = 0;
+                        GvItinerary.Columns["StartDate"].Width = 250;
+                        GvItinerary.Columns["StartDate"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.City))
+                    {
+                        GvItinerary.Columns["CityName"].HeaderText = "城市";
+                        GvItinerary.Columns["CityName"].DisplayIndex = 0;
+                        GvItinerary.Columns["CityName"].Width = 250;
+                        GvItinerary.Columns["CityName"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    else if (cbCalcTotal.Text.Equals(CalcTotalType.FeeType))
+                    {
+                        GvItinerary.Columns["FeeType"].HeaderText = "费用类别";
+                        GvItinerary.Columns["FeeType"].DisplayIndex = 0;
+                        GvItinerary.Columns["FeeType"].Width = 250;
+                        GvItinerary.Columns["FeeType"].SortMode = DataGridViewColumnSortMode.Automatic;
+                        GvItinerary.Columns["Cost"].HeaderText = "花费(元)";
+                        GvItinerary.Columns["Cost"].DefaultCellStyle.Format = "N";
+                        GvItinerary.Columns["Cost"].Width = 350;
+                    }
+                    return;
+                }
+
                 //设置显示的列名
                 GvItinerary.Columns["Id"].Visible = false;
                 GvItinerary.Columns["CityName"].HeaderText = "城市";
@@ -483,7 +565,7 @@ namespace TicketHelper
         {
             InitSearchPanel();
             lbCompany.Visible = (currentModuel == CurrentModule.Itinerary);
-            //cbCompany.Visible = (currentModuel == CurrentModule.Traffic);
+            cbCompany.Visible = (currentModuel == CurrentModule.Itinerary);
         }
 
         /// <summary>
@@ -508,14 +590,15 @@ namespace TicketHelper
                 dataList.Add(hotelList);
                 dataList.Add(hospitalList);
                 ExcelHelper<ModelBase>.ExportListToExcel(dataList, dialog.FileName);
-            }
 
-            if (MessageBox.Show("现在打开导出文件吗？", "打开文件", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                Thread th = new Thread(() =>
+                if (MessageBox.Show("现在打开导出文件吗？", "打开文件", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    System.Diagnostics.Process.Start("C:\\Users\\30908\\Desktop\\资料汇总.xlsx");
-                });
+                    Task.Run(() =>
+                    {
+                        ExcelHelper<ModelBase>.OpenExcel(dialog.FileName);
+                    });
+                }
+
             }
         }
     }

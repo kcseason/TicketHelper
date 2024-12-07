@@ -28,16 +28,14 @@ namespace TicketHelper.DBO
             var objs = new List<object>() { args[0], args[1] };
             if (!string.IsNullOrEmpty(args[2].ToString()))
             {
-                sql += @"AND CityName IN(?) ";
-                objs.Add(args[2]);
+                sql += @" AND CityName IN(" + args[2].ToString() + ")";
             }
             if (!string.IsNullOrEmpty(args[3].ToString()))
             {
-                sql += @"AND FeeType IN(?) ";
-                objs.Add(args[3]);
+                sql += @" AND FeeType IN(" + args[3].ToString() + ")";
             }
 
-            return base.QueryTable(sql, objs.ToArray());
+            return base.QueryTable(sql, objs.ToArray()).ToList();
         }
         public List<T> QueryTableByFeeType(string feeType)
         {

@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using System.Diagnostics;
 using TicketHelper.Model;
 
 namespace TicketHelper
@@ -134,7 +135,7 @@ namespace TicketHelper
                 var hospitalList = list.Cast<T>().Cast<HospitalPatient>();
                 int currentRow = 1;
                 worksheet.Cell(currentRow, 1).Value = "合计：";
-                worksheet.Cell(currentRow, 2).Value = hospitalList.Sum(x => x.Cost).ToString(); ;
+                worksheet.Cell(currentRow, 2).Value = hospitalList.Sum(x => x.Cost).ToString() + " 元";
                 currentRow++;
                 // 添加标题行
                 worksheet.Cell(currentRow, 1).Value = "城市";
@@ -184,5 +185,16 @@ namespace TicketHelper
 
             return true;
         }
+
+        public static void OpenExcel(string filePath)
+        {
+            // 确保 Excel 应用程序可见
+            Process excelProcess = new Process();
+            excelProcess.StartInfo.FileName = "excel";
+            excelProcess.StartInfo.Arguments = $"\"{filePath}\"";
+            excelProcess.StartInfo.UseShellExecute = true;
+            excelProcess.Start();
+        }
+
     }
 }

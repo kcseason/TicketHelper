@@ -7,6 +7,7 @@
         public static readonly string City = "按城市";
         public static readonly string Company = "出行";
         public static readonly string Ticket = "按票类";
+        public static readonly string FeeType = "按费用类别";
 
         public static List<string> ItineraryTypes =
         [
@@ -15,7 +16,7 @@
 
         public static List<string> HotelTypes =
         [
-            "","按年","按月","按城市","按票类"
+            "","按年","按月","按城市","按费用类别"
         ];
 
         public static List<string> HospitalPatientTypes =

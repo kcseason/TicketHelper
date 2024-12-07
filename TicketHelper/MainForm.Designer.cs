@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             toolStrip1 = new ToolStrip();
             tsbTraffic = new ToolStripButton();
             tsbHotel = new ToolStripButton();
@@ -147,15 +147,15 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(label6);
+            splitContainer1.Panel1.Controls.Add(cbTicketType);
+            splitContainer1.Panel1.Controls.Add(lbTicketType);
             splitContainer1.Panel1.Controls.Add(lbCount);
             splitContainer1.Panel1.Controls.Add(label9);
             splitContainer1.Panel1.Controls.Add(label7);
-            splitContainer1.Panel1.Controls.Add(cbTicketType);
             splitContainer1.Panel1.Controls.Add(cbCompany);
             splitContainer1.Panel1.Controls.Add(cbCity);
             splitContainer1.Panel1.Controls.Add(cbCalcTotal);
             splitContainer1.Panel1.Controls.Add(label8);
-            splitContainer1.Panel1.Controls.Add(lbTicketType);
             splitContainer1.Panel1.Controls.Add(lbCompany);
             splitContainer1.Panel1.Controls.Add(label5);
             splitContainer1.Panel1.Controls.Add(dtEnd);
@@ -219,7 +219,7 @@
             cbTicketType.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
             cbTicketType.FillColor = Color.White;
             cbTicketType.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            cbTicketType.Location = new Point(1150, 18);
+            cbTicketType.Location = new Point(884, 19);
             cbTicketType.Margin = new Padding(4, 5, 4, 5);
             cbTicketType.MinimumSize = new Size(63, 0);
             cbTicketType.Name = "cbTicketType";
@@ -240,7 +240,7 @@
             cbCompany.DropDownStyle = Sunny.UI.UIDropDownStyle.DropDownList;
             cbCompany.FillColor = Color.White;
             cbCompany.Font = new Font("宋体", 12F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            cbCompany.Location = new Point(876, 19);
+            cbCompany.Location = new Point(1159, 19);
             cbCompany.Margin = new Padding(4, 5, 4, 5);
             cbCompany.MinimumSize = new Size(63, 0);
             cbCompany.Name = "cbCompany";
@@ -296,7 +296,7 @@
             // lbTicketType
             // 
             lbTicketType.AutoSize = true;
-            lbTicketType.Location = new Point(1102, 24);
+            lbTicketType.Location = new Point(836, 25);
             lbTicketType.Name = "lbTicketType";
             lbTicketType.Size = new Size(46, 24);
             lbTicketType.TabIndex = 11;
@@ -305,7 +305,7 @@
             // lbCompany
             // 
             lbCompany.AutoSize = true;
-            lbCompany.Location = new Point(828, 24);
+            lbCompany.Location = new Point(1111, 24);
             lbCompany.Name = "lbCompany";
             lbCompany.Size = new Size(46, 24);
             lbCompany.TabIndex = 9;
@@ -387,14 +387,14 @@
             // 
             GvItinerary.AllowUserToOrderColumns = true;
             GvItinerary.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.Window;
-            dataGridViewCellStyle2.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            GvItinerary.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Window;
+            dataGridViewCellStyle1.Font = new Font("Microsoft YaHei UI", 10.5F, FontStyle.Regular, GraphicsUnit.Point, 134);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            GvItinerary.DefaultCellStyle = dataGridViewCellStyle1;
             GvItinerary.Dock = DockStyle.Fill;
             GvItinerary.Location = new Point(0, 0);
             GvItinerary.Name = "GvItinerary";

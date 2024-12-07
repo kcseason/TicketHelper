@@ -8,8 +8,6 @@ namespace TicketHelper.Model
         public string? Start { get; set; }
 
         public string? End { get; set; }
-
-        public decimal Cost { get; set; }
         public string? CompanyType { get; set; }
         public string? TicketType { get; set; }
         public string? HasTicket { get; set; }
